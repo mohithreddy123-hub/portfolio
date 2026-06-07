@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ExternalLink, ShieldCheck, Cpu, Settings } from 'lucide-react';
+import { ExternalLink, ShieldCheck, Cpu, Settings, ClipboardList, Wallet } from 'lucide-react';
 
 const Github = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
@@ -12,9 +12,66 @@ const Github = (props: React.SVGProps<SVGSVGElement>) => (
 type TabType = 'overview' | 'architecture' | 'simulator';
 
 export default function Projects() {
-  const [activeProject, setActiveProject] = useState<'tenantvault' | 'facevitals'>('tenantvault');
+  const [activeProject, setActiveProject] = useState<'tenantvault' | 'facevitals' | 'tracknest'>('tenantvault');
   const [tenantVaultTab, setTenantVaultTab] = useState<TabType>('overview');
   const [faceVitalsTab, setFaceVitalsTab] = useState<TabType>('overview');
+  const [trackNestTab, setTrackNestTab] = useState<TabType>('overview');
+
+  // Simulator States for TrackNest
+  const [tasks, setTasks] = useState([
+    { id: 1, text: 'Deploy Django API to Render', status: 'Completed' },
+    { id: 2, text: 'Set up MySQL database schemas', status: 'Completed' },
+    { id: 3, text: 'Configure JWT rotation interceptors', status: 'In Progress' },
+    { id: 4, text: 'Write React private route guards', status: 'Pending' }
+  ]);
+  const [expenses, setExpenses] = useState([
+    { id: 1, name: 'Server Hosting (Render)', amount: 20 },
+    { id: 2, name: 'Database instance (MySQL)', amount: 15 },
+    { id: 3, name: 'Domain Registration', amount: 12 }
+  ]);
+  const [newTaskText, setNewTaskText] = useState('');
+  const [newExpenseName, setNewExpenseName] = useState('');
+  const [newExpenseAmount, setNewExpenseAmount] = useState('');
+
+  const handleAddTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTaskText.trim()) return;
+    setTasks(prev => [
+      ...prev,
+      { id: Date.now(), text: newTaskText.trim(), status: 'Pending' }
+    ]);
+    setNewTaskText('');
+  };
+
+  const toggleTaskStatus = (id: number) => {
+    setTasks(prev => prev.map(t => {
+      if (t.id === id) {
+        const nextStatus = t.status === 'Pending' ? 'In Progress' : t.status === 'In Progress' ? 'Completed' : 'Pending';
+        return { ...t, status: nextStatus };
+      }
+      return t;
+    }));
+  };
+
+  const handleAddExpense = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newExpenseName.trim() || !newExpenseAmount.trim()) return;
+    const amt = parseFloat(newExpenseAmount);
+    if (isNaN(amt)) return;
+    setExpenses(prev => [
+      ...prev,
+      { id: Date.now(), name: newExpenseName.trim(), amount: amt }
+    ]);
+    setNewExpenseName('');
+    setNewExpenseAmount('');
+  };
+
+  const handleDeleteExpense = (id: number) => {
+    setExpenses(prev => prev.filter(e => e.id !== id));
+  };
+
+  const taskCompletionRate = tasks.length ? Math.round((tasks.filter(t => t.status === 'Completed').length / tasks.length) * 100) : 0;
+  const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   // Simulator States for TenantVault
   const [consoleLogs, setConsoleLogs] = useState<string[]>([
@@ -175,7 +232,7 @@ export default function Projects() {
 
         {/* Project Selector Tabs */}
         <div className="flex justify-center mb-12">
-          <div className="bg-white/5 border border-white/5 p-1 rounded-2xl flex max-w-lg w-full relative z-20">
+          <div className="bg-white/5 border border-white/5 p-1 rounded-2xl flex max-w-2xl w-full relative z-20">
             <button
               onClick={() => setActiveProject('tenantvault')}
               className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer ${
@@ -197,6 +254,17 @@ export default function Projects() {
             >
               <Cpu className="w-4 h-4" />
               FaceVitals ML/CV
+            </button>
+            <button
+              onClick={() => setActiveProject('tracknest')}
+              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer ${
+                activeProject === 'tracknest'
+                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-600/30'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <ClipboardList className="w-4 h-4" />
+              TrackNest Dashboard
             </button>
           </div>
         </div>
@@ -594,6 +662,276 @@ export default function Projects() {
                   {/* Tech stack badge list */}
                   <div className="flex flex-wrap gap-2 mt-4">
                     {['Python', 'Streamlit', 'OpenCV', 'Scikit-learn', 'NumPy', 'SciPy', 'rPPG POS', 'Matplotlib'].map((tech) => (
+                      <span key={tech} className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-gray-300">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Project 3: TrackNest */}
+            {activeProject === 'tracknest' && (
+              <motion.div
+                key="tracknest"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
+              >
+                {/* Info and Navigation Column */}
+                <div className="lg:col-span-6 flex flex-col justify-between">
+                  <div>
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-300 text-xs font-semibold mb-4">
+                      <span>Full Stack Productivity & Budget SaaS</span>
+                    </div>
+
+                    <h3 className="text-2xl md:text-3.5xl font-extrabold text-white mb-4">
+                      TrackNest
+                    </h3>
+
+                    <p className="text-gray-300 text-base md:text-lg mb-6 leading-relaxed">
+                      A professional full-stack application designed to unify task management 
+                      and expense tracking, providing real-time aggregated metrics, multi-user 
+                      isolation, and dynamic visual dashboards.
+                    </p>
+
+                    {/* Tab Navigation for details */}
+                    <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                      {(['overview', 'architecture', 'simulator'] as TabType[]).map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setTrackNestTab(tab)}
+                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                            trackNestTab === tab
+                              ? 'bg-white/10 text-white border border-white/10'
+                              : 'text-gray-500 hover:text-gray-300 border border-transparent'
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Tab Contents */}
+                    <div className="min-h-[220px]">
+                      {trackNestTab === 'overview' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Key Technical Features:</h4>
+                          <ul className="space-y-2.5 text-gray-400 text-sm">
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-emerald-400 font-bold">✓</span>
+                              <span><strong>Unified Dashboard Interface:</strong> Real-time synchronization of daily expenses and multi-tiered task statuses (Pending, In Progress, Completed).</span>
+                            </li>
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-emerald-400 font-bold">✓</span>
+                              <span><strong>Real-time Analytical Aggregation:</strong> Executes high-performance sum and completion calculations on database querysets using optimized indexes.</span>
+                            </li>
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-emerald-400 font-bold">✓</span>
+                              <span><strong>JWT Session Security:</strong> SimpleJWT-based user authentication on the API with automated frontend rotation and session clear rules.</span>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+
+                      {trackNestTab === 'architecture' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">System Architecture:</h4>
+                          <div className="grid grid-cols-2 gap-4 text-xs">
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-emerald-400 font-semibold block mb-1">Frontend Client</span>
+                              React SPA built with Axios interceptors, protected routing guards, React Router, and React Hot Toast feedback.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-emerald-400 font-semibold block mb-1">REST Backend</span>
+                              Django REST Framework endpoint system, customized global exception handlers, and API request throttling.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-emerald-400 font-semibold block mb-1">Persistent Storage</span>
+                              Scalable, structured MySQL relational database utilizing relational indexing and row-level data isolation.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-emerald-400 font-semibold block mb-1">Hosting & Deployment</span>
+                              Hosted on Render platforms, served via Gunicorn servers and WhiteNoise middleware for static asset loads.
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {trackNestTab === 'simulator' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Interactive Demo Details:</h4>
+                          <p className="text-gray-400 text-xs leading-relaxed">
+                            Interact with the live dashboard simulator on the right. You can add new tasks, toggle task statuses, add expenses, and see the completion rates and budgets adjust instantly in the analytics overlay!
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex flex-wrap items-center gap-4 mt-8">
+                    <a
+                      href="https://github.com/mohithreddy123-hub/portfolio"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white flex items-center gap-2 font-bold text-sm transition-all duration-200"
+                    >
+                      <Github className="w-4 h-4" />
+                      GitHub Code
+                    </a>
+                    <a
+                      href="https://tracknest-frontend-x6ln.onrender.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-all duration-200"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Live Application
+                    </a>
+                  </div>
+                </div>
+
+                {/* Simulated Screen / Visual Column */}
+                <div className="lg:col-span-6 flex flex-col items-stretch">
+                  <div className="bg-dark-950 border border-white/5 rounded-2xl flex flex-col flex-grow overflow-hidden shadow-inner">
+                    
+                    {/* Console Header */}
+                    <div className="bg-white/5 px-4 py-3 border-b border-white/5 flex items-center justify-between font-mono text-[11px]">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                        <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                        <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                      </div>
+                      <span className="text-gray-400 font-semibold tracking-wide text-xs">TrackNest Real-Time Dashboard</span>
+                      <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        CONNECTED
+                      </span>
+                    </div>
+
+                    {/* Dashboard Mini-Analytics Header */}
+                    <div className="p-4 grid grid-cols-2 gap-4 border-b border-white/5">
+                      <div className="bg-white/5 p-3 rounded-xl text-center border border-white/5">
+                        <span className="text-gray-400 text-[10px] uppercase font-bold block mb-1">Task Progress</span>
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-emerald-400 text-2xl font-bold font-mono text-glow-emerald">{taskCompletionRate}%</span>
+                        </div>
+                        <div className="w-full bg-white/10 h-1 rounded-full mt-2 overflow-hidden">
+                          <div className="bg-emerald-400 h-full transition-all duration-300" style={{ width: `${taskCompletionRate}%` }} />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white/5 p-3 rounded-xl text-center border border-white/5">
+                        <span className="text-gray-400 text-[10px] uppercase font-bold block mb-1">Total Expenses</span>
+                        <span className="text-cyan-400 text-2xl font-bold font-mono text-glow-cyan">${totalExpenses}</span>
+                        <span className="text-gray-400 text-[9px] block mt-1">MySQL Indexed Sum</span>
+                      </div>
+                    </div>
+
+                    {/* Simulator Panels split */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 flex-grow overflow-y-auto max-h-[300px]">
+                      {/* Tasks panel */}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center border-b border-white/5 pb-1">
+                          <span className="text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1">
+                            <ClipboardList className="w-3 h-3 text-emerald-400" />
+                            Tasks ({tasks.length})
+                          </span>
+                        </div>
+
+                        {/* Task Form */}
+                        <form onSubmit={handleAddTask} className="flex gap-1">
+                          <input
+                            type="text"
+                            value={newTaskText}
+                            onChange={(e) => setNewTaskText(e.target.value)}
+                            placeholder="Add task..."
+                            className="flex-grow px-2 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-white outline-none focus:border-emerald-500/30 font-sans"
+                          />
+                          <button type="submit" className="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-bold cursor-pointer">+</button>
+                        </form>
+
+                        {/* Task List */}
+                        <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
+                          {tasks.map(t => (
+                            <div key={t.id} className="flex justify-between items-center p-1.5 rounded bg-white/5 border border-white/5 text-[9px] font-sans">
+                              <span className="text-gray-300 truncate max-w-[100px]">{t.text}</span>
+                              <button
+                                onClick={() => toggleTaskStatus(t.id)}
+                                className={`px-1.5 py-0.5 rounded text-[8px] font-bold transition-all duration-200 cursor-pointer ${
+                                  t.status === 'Completed'
+                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                    : t.status === 'In Progress'
+                                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                                }`}
+                              >
+                                {t.status}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Expenses panel */}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center border-b border-white/5 pb-1">
+                          <span className="text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1">
+                            <Wallet className="w-3 h-3 text-cyan-400" />
+                            Expenses
+                          </span>
+                        </div>
+
+                        {/* Expense Form */}
+                        <form onSubmit={handleAddExpense} className="flex gap-1">
+                          <input
+                            type="text"
+                            value={newExpenseName}
+                            onChange={(e) => setNewExpenseName(e.target.value)}
+                            placeholder="Name"
+                            className="w-1/2 px-1.5 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-white outline-none focus:border-cyan-500/30 font-sans"
+                          />
+                          <input
+                            type="number"
+                            value={newExpenseAmount}
+                            onChange={(e) => setNewExpenseAmount(e.target.value)}
+                            placeholder="$"
+                            className="w-1/4 px-1 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-white outline-none focus:border-cyan-500/30 font-sans"
+                          />
+                          <button type="submit" className="w-1/4 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-[10px] font-bold cursor-pointer">+</button>
+                        </form>
+
+                        {/* Expenses list */}
+                        <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
+                          {expenses.map(e => (
+                            <div key={e.id} className="flex justify-between items-center p-1.5 rounded bg-white/5 border border-white/5 text-[9px] font-sans">
+                              <div className="flex flex-col truncate max-w-[80px]">
+                                <span className="text-gray-300 truncate">{e.name}</span>
+                              </div>
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                <span className="text-cyan-400 font-bold font-mono">${e.amount}</span>
+                                <button
+                                  onClick={() => handleDeleteExpense(e.id)}
+                                  className="text-gray-500 hover:text-rose-400 font-bold cursor-pointer text-[8px]"
+                                >
+                                  ✖
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tech stack badge list */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {['React.js', 'Django REST Framework', 'MySQL', 'SimpleJWT', 'Axios', 'Gunicorn', 'WhiteNoise', 'Render'].map((tech) => (
                       <span key={tech} className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-gray-300">
                         {tech}
                       </span>
