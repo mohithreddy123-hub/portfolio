@@ -43,7 +43,7 @@ export default function Footer() {
         </div>
 
         {/* Tech Stack Mention */}
-        <p className="text-gray-600 text-[10px] uppercase tracking-widest font-bold text-center md:text-left">
+        <p className="text-gray-400 text-[10px] uppercase tracking-widest font-bold text-center md:text-left">
           Crafted with <span className="text-indigo-400">React.js</span> • <span className="text-indigo-400">Tailwind CSS</span> • <span className="text-indigo-400">Framer Motion</span>
         </p>
 
