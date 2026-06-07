@@ -38,6 +38,27 @@ body {
   overflow-x: hidden;
 }
 
+/* Lenis smooth scroll adjustments */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 /* Dynamic grid background */
 .grid-bg {
   background-size: 50px 50px;
@@ -67,6 +88,34 @@ body {
   border-color: rgba(99, 102, 241, 0.4);
   box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
   background: rgba(12, 12, 20, 0.85);
+}
+
+/* Premium Gradient Border Card */
+.gradient-border-card {
+  position: relative;
+  border-radius: 1.5rem;
+  background: rgba(10, 10, 15, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid transparent; /* default fallback */
+}
+
+.gradient-border-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  padding: 1.2px;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.15),
+    transparent 40%,
+    rgba(99, 102, 241, 0.25)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* Accent glowing rings */

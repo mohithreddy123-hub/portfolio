@@ -1,7 +1,21 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Download, ArrowRight } from 'lucide-react';
+import { Mail, Download, ArrowRight, Code2, Cpu, Server, Settings } from 'lucide-react';
 import ParticlesBg from './ui/ParticlesBg';
+import Magnetic from './ui/Magnetic';
+
+const titles = [
+  'Full-Stack Developer',
+  'SaaS Architect',
+  'AI & ML Specialist',
+];
+
+const floatingBadges = [
+  { text: 'Python', icon: Cpu, top: '25%', left: '10%', duration: 9, delay: 0 },
+  { text: 'React.js', icon: Code2, top: '30%', right: '10%', duration: 12, delay: 2 },
+  { text: 'FastAPI', icon: Settings, bottom: '30%', left: '12%', duration: 10, delay: 1 },
+  { text: 'Django', icon: Server, bottom: '25%', right: '15%', duration: 13, delay: 3 },
+];
 
 const Github = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
@@ -17,12 +31,6 @@ const Linkedin = (props: React.SVGProps<SVGSVGElement>) => (
     <circle cx="4" cy="4" r="2" />
   </svg>
 );
-
-const titles = [
-  'Full-Stack Developer',
-  'SaaS Architect',
-  'AI & ML Specialist',
-];
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
@@ -56,6 +64,34 @@ export default function Hero() {
 
       {/* Canvas particles */}
       <ParticlesBg />
+
+      {/* Floating technology icons side-decoration (Desktop only) */}
+      {floatingBadges.map((badge, idx) => (
+        <motion.div
+          key={idx}
+          style={{
+            position: 'absolute',
+            top: badge.top,
+            left: badge.left,
+            right: badge.right,
+            bottom: badge.bottom,
+          }}
+          animate={{
+            y: [0, -15, 0],
+            rotate: [0, 5, -5, 0],
+          }}
+          transition={{
+            duration: badge.duration,
+            repeat: Infinity,
+            delay: badge.delay,
+            ease: 'easeInOut',
+          }}
+          className="hidden lg:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 border border-white/5 text-gray-400 font-mono text-xs select-none shadow-lg shadow-black/30 backdrop-blur-sm"
+        >
+          <badge.icon className="w-4 h-4 text-indigo-400" />
+          <span>{badge.text}</span>
+        </motion.div>
+      ))}
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center">
         {/* Top greeting badge */}
@@ -116,23 +152,27 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto mb-16"
         >
-          <button
-            onClick={handleScrollToContact}
-            className="group px-8 py-4 w-full sm:w-auto rounded-xl font-bold tracking-wide text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-[0_0_30px_rgba(99,102,241,0.4)] flex items-center justify-center gap-2.5"
-          >
-            Start a Conversation
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
+          <Magnetic>
+            <button
+              onClick={handleScrollToContact}
+              className="group px-8 py-4 w-full sm:w-auto rounded-xl font-bold tracking-wide text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-[0_0_30px_rgba(99,102,241,0.4)] flex items-center justify-center gap-2.5"
+            >
+              Start a Conversation
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
+          </Magnetic>
 
-          <a
-            href="https://github.com/mohithreddy123-hub"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-4 w-full sm:w-auto rounded-xl font-bold tracking-wide text-gray-300 hover:text-white glass-card hover:bg-white/10 hover:border-white/25 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5"
-          >
-            <Download className="w-4 h-4" />
-            Download Resume
-          </a>
+          <Magnetic>
+            <a
+              href="https://github.com/mohithreddy123-hub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 w-full sm:w-auto rounded-xl font-bold tracking-wide text-gray-300 hover:text-white glass-card hover:bg-white/10 hover:border-white/25 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5"
+            >
+              <Download className="w-4 h-4" />
+              Download Resume
+            </a>
+          </Magnetic>
         </motion.div>
 
         {/* Social Links */}

@@ -1,12 +1,6 @@
 import { motion } from 'framer-motion';
 import { Shield, Brain, Terminal, Server } from 'lucide-react';
-
-const stats = [
-  { label: 'Degree', value: 'B.Tech CSE', sub: 'Anurag University' },
-  { label: 'Academic Standing', value: '7.29 CGPA', sub: 'Out of 10.0' },
-  { label: 'Major Projects', value: 'TenantVault & FaceVitals', sub: 'SaaS & Computer Vision' },
-  { label: 'Certifications', value: '6 Professional', sub: 'Azure, OCI, Cisco, AWS' },
-];
+import Counter from './ui/Counter';
 
 const pillars = [
   {
@@ -40,7 +34,7 @@ export default function About() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 }
+      transition: { staggerChildren: 0.12 }
     }
   };
 
@@ -65,7 +59,7 @@ export default function About() {
         </div>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch mb-20">
           
           {/* Text Summary */}
           <motion.div
@@ -73,7 +67,7 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-7 space-y-6 text-gray-300 text-lg leading-relaxed"
+            className="lg:col-span-7 flex flex-col justify-center space-y-6 text-gray-300 text-lg leading-relaxed"
           >
             <p>
               I am a <strong className="text-white">Full-Stack Software Engineer</strong> with a strong foundation in computer science and a passion for engineering scalable, secure systems. My engineering philosophy revolves around combining robust backend architectures with fluid, responsive user experiences and data-driven intelligence.
@@ -86,30 +80,65 @@ export default function About() {
             </p>
           </motion.div>
 
-          {/* Stats Cards */}
+          {/* Stats Cards (with Gradient Borders and Counters) */}
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-5"
           >
-            {stats.map((stat, i) => (
-              <div
-                key={i}
-                className="glass-card p-6 rounded-2xl flex flex-col justify-center min-h-[140px] border border-white/5 hover:border-indigo-500/20 transition-all duration-300"
-              >
-                <span className="text-gray-400 text-xs font-semibold tracking-wider uppercase mb-1">
-                  {stat.label}
-                </span>
-                <span className="text-white text-xl md:text-2xl font-bold tracking-tight mb-1">
-                  {stat.value}
-                </span>
-                <span className="text-indigo-300 text-xs font-medium">
-                  {stat.sub}
-                </span>
-              </div>
-            ))}
+            {/* Card 1: Degree */}
+            <div className="gradient-border-card p-6 flex flex-col justify-center min-h-[145px] hover:-translate-y-1.5 transition-transform duration-300 shadow-lg shadow-black/25">
+              <span className="text-gray-400 text-xs font-semibold tracking-wider uppercase mb-1">
+                Degree
+              </span>
+              <span className="text-white text-xl md:text-2xl font-bold tracking-tight mb-1">
+                B.Tech CSE
+              </span>
+              <span className="text-indigo-300 text-xs font-medium">
+                Anurag University
+              </span>
+            </div>
+
+            {/* Card 2: Standing (Counter) */}
+            <div className="gradient-border-card p-6 flex flex-col justify-center min-h-[145px] hover:-translate-y-1.5 transition-transform duration-300 shadow-lg shadow-black/25">
+              <span className="text-gray-400 text-xs font-semibold tracking-wider uppercase mb-1">
+                Academic Standing
+              </span>
+              <span className="text-white text-xl md:text-2xl font-bold tracking-tight mb-1">
+                <Counter value={7.29} decimals={2} /> CGPA
+              </span>
+              <span className="text-indigo-300 text-xs font-medium">
+                Out of 10.0
+              </span>
+            </div>
+
+            {/* Card 3: Major Projects */}
+            <div className="gradient-border-card p-6 flex flex-col justify-center min-h-[145px] hover:-translate-y-1.5 transition-transform duration-300 shadow-lg shadow-black/25">
+              <span className="text-gray-400 text-xs font-semibold tracking-wider uppercase mb-1">
+                Major Projects
+              </span>
+              <span className="text-white text-base md:text-lg font-bold tracking-tight mb-1 leading-snug">
+                TenantVault & FaceVitals
+              </span>
+              <span className="text-indigo-300 text-xs font-medium">
+                SaaS & Computer Vision
+              </span>
+            </div>
+
+            {/* Card 4: Certifications (Counter) */}
+            <div className="gradient-border-card p-6 flex flex-col justify-center min-h-[145px] hover:-translate-y-1.5 transition-transform duration-300 shadow-lg shadow-black/25">
+              <span className="text-gray-400 text-xs font-semibold tracking-wider uppercase mb-1">
+                Certifications
+              </span>
+              <span className="text-white text-xl md:text-2xl font-bold tracking-tight mb-1">
+                <Counter value={6} /> Professional
+              </span>
+              <span className="text-indigo-300 text-xs font-medium">
+                Azure, OCI, Cisco, AWS
+              </span>
+            </div>
           </motion.div>
         </div>
 
@@ -125,9 +154,9 @@ export default function About() {
             <motion.div
               variants={itemVariants}
               key={idx}
-              className={`glass-card p-8 rounded-2xl border ${pillar.color} flex flex-col h-full hover:scale-[1.02] transition-all duration-300`}
+              className={`gradient-border-card p-8 flex flex-col h-full hover:-translate-y-1.5 transition-transform duration-300 shadow-lg shadow-black/25`}
             >
-              <div className="p-3 w-fit rounded-xl bg-white/5 mb-6 border border-white/5">
+              <div className="p-3 w-fit rounded-xl bg-white/5 mb-6 border border-white/5 text-indigo-400">
                 <pillar.icon className="w-6 h-6" />
               </div>
               <h3 className="text-white font-bold text-lg mb-3 tracking-wide">{pillar.title}</h3>

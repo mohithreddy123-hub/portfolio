@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ExternalLink, ShieldCheck, Cpu, Settings } from 'lucide-react';
 
 const Github = (props: React.SVGProps<SVGSVGElement>) => (
@@ -32,7 +32,17 @@ export default function Projects() {
   const [respRate, setRespRate] = useState(16);
   const [signalQuality, setSignalQuality] = useState(94);
   const [ppgPoints, setPpgPoints] = useState<number[]>([]);
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Parallax transform based on section scroll progress
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+  
+  const yParallax = useTransform(scrollYProgress, [0, 1], [30, -30]);
 
   // TenantVault Log Simulator loop
   useEffect(() => {
@@ -80,7 +90,6 @@ export default function Projects() {
     let tick = 0;
     const interval = setInterval(() => {
       tick += 0.1;
-      // Synthesize ECG/PPG lookalike wave with sine and cosine
       const baseWave = Math.sin(tick * 3.5) * 15;
       const dicroticNotch = Math.cos(tick * 7.0) * 5;
       const finalValue = 40 + baseWave + dicroticNotch + (Math.random() - 0.5) * 2;
@@ -91,7 +100,6 @@ export default function Projects() {
         return next;
       });
 
-      // Modulate HR, RR slightly
       if (Math.random() > 0.85) {
         setHeartRate(prev => Math.min(Math.max(prev + Math.floor(Math.random() * 3) - 1, 65), 85));
         setRespRate(prev => Math.min(Math.max(prev + Math.floor(Math.random() * 3) - 1, 12), 20));
@@ -146,11 +154,11 @@ export default function Projects() {
       }
     });
     ctx.stroke();
-    ctx.shadowBlur = 0; // Reset shadow
+    ctx.shadowBlur = 0;
   }, [ppgPoints, faceVitalsTab, activeProject]);
 
   return (
-    <section id="projects" className="py-24 relative overflow-hidden bg-dark-900">
+    <section ref={sectionRef} id="projects" className="py-24 relative overflow-hidden bg-dark-900">
       <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-cyan-500/5 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-indigo-500/5 blur-[100px] pointer-events-none" />
 
@@ -167,10 +175,10 @@ export default function Projects() {
 
         {/* Project Selector Tabs */}
         <div className="flex justify-center mb-12">
-          <div className="bg-white/5 border border-white/5 p-1 rounded-2xl flex max-w-lg w-full">
+          <div className="bg-white/5 border border-white/5 p-1 rounded-2xl flex max-w-lg w-full relative z-20">
             <button
               onClick={() => setActiveProject('tenantvault')}
-              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 ${
+              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer ${
                 activeProject === 'tenantvault'
                   ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-600/30'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -181,7 +189,7 @@ export default function Projects() {
             </button>
             <button
               onClick={() => setActiveProject('facevitals')}
-              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 ${
+              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer ${
                 activeProject === 'facevitals'
                   ? 'bg-gradient-to-r from-cyan-600 to-cyan-500 text-white shadow-lg shadow-cyan-600/30'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -193,9 +201,14 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Project Display Container */}
-        <div className="glass-card rounded-3xl border border-white/5 p-6 md:p-10 shadow-2xl relative overflow-hidden min-h-[580px]">
-          
+        {/* Project Display Container with Parallax y-offset */}
+        <motion.div
+          style={{ y: yParallax }}
+          className="gradient-border-card rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden min-h-[580px] hover:shadow-[0_0_50px_rgba(99,102,241,0.15)] transition-all duration-500"
+        >
+          {/* Subtle inside glow */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none" />
+
           <AnimatePresence mode="wait">
             
             {/* Project 1: TenantVault */}
@@ -232,7 +245,7 @@ export default function Projects() {
                         <button
                           key={tab}
                           onClick={() => setTenantVaultTab(tab)}
-                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                             tenantVaultTab === tab
                               ? 'bg-white/10 text-white border border-white/10'
                               : 'text-gray-500 hover:text-gray-300 border border-transparent'
@@ -347,7 +360,7 @@ export default function Projects() {
                             <button
                               key={tier}
                               onClick={() => setSimTenant(tier)}
-                              className={`px-2.5 py-1 rounded font-bold transition-all duration-200 ${
+                              className={`px-2.5 py-1 rounded font-bold transition-all duration-200 cursor-pointer ${
                                 simTenant === tier
                                   ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
                                   : 'bg-white/5 hover:bg-white/10 text-gray-400 border border-transparent'
@@ -362,7 +375,7 @@ export default function Projects() {
                       <button
                         onClick={runSimEncryption}
                         disabled={simFileEncrypting}
-                        className={`px-3 py-1.5 rounded-lg font-bold text-white shadow-md flex items-center gap-1.5 transition-all duration-200 ${
+                        className={`px-3 py-1.5 rounded-lg font-bold text-white shadow-md flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
                           simFileEncrypting
                             ? 'bg-indigo-800 cursor-not-allowed'
                             : 'bg-indigo-600 hover:bg-indigo-500'
@@ -437,7 +450,7 @@ export default function Projects() {
                         <button
                           key={tab}
                           onClick={() => setFaceVitalsTab(tab)}
-                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                             faceVitalsTab === tab
                               ? 'bg-white/10 text-white border border-white/10'
                               : 'text-gray-500 hover:text-gray-300 border border-transparent'
@@ -592,7 +605,7 @@ export default function Projects() {
             
           </AnimatePresence>
 
-        </div>
+        </motion.div>
 
       </div>
     </section>

@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Code2, Layout, Server, Database, Cloud, ShieldAlert, Brain } from 'lucide-react';
 
 const skillCategories = [
@@ -46,7 +47,49 @@ const skillCategories = [
   },
 ];
 
+// Dictionary of explanations for interactive tech stack reveal
+const skillDescriptions: Record<string, string> = {
+  Python: 'Core programming language used for scripting, AI model training, and robust backend engineering.',
+  JavaScript: 'Enables client-side reactivity and handles user events across frontend dashboards.',
+  'React.js': 'Builds highly componentized interfaces using virtual DOM and state synchronization.',
+  HTML5: 'Structures semantic browser content ensuring full accessibility.',
+  CSS3: 'Handles layout layout, custom styling sheets, and core style sheets.',
+  'Tailwind CSS': 'Utility-first styling utility used for high-fidelity custom design systems.',
+  Streamlit: 'Rapid prototyping of analytical, data-heavy dashboard panels.',
+  Django: 'Battery-included backend framework used to design enterprise-grade secure architectures.',
+  'Django REST Framework': 'Builds standardized REST APIs with serializers and class-based viewsets.',
+  Flask: 'Microservice-oriented framework chosen for lightweight server endpoints.',
+  FastAPI: 'Asynchronous server framework compiling automated OpenAPI schemas with high performance.',
+  'Django Channels': 'Orchestrates asynchronous WebSocket protocols for live user interaction.',
+  Celery: 'Distributed task queue offloading heavy cryptographic computations in the background.',
+  Daphne: 'ASGI web server running alongside Celery/Redis for multi-protocol async requests.',
+  Redis: 'In-memory data structure broker handling fast session storage and job message routing.',
+  PostgreSQL: 'Primary relational database utilizing structured data validation and query logic.',
+  MySQL: 'Standard open-source relational storage for legacy database operations.',
+  SQLite: 'Zero-config local embedded query runner for rapid prototyping.',
+  Git: 'Tracks version history, code branches, and merge paths.',
+  GitHub: 'Collaborative code hosting, continuous deployment integrations, and audit monitoring.',
+  Vercel: 'Global serverless host providing edge networks for high-performance frontend loads.',
+  Render: 'Deploys continuous integration containers for active API servers and background workers.',
+  Cloudinary: 'Secure cloud hosting managing digital media assets and files dynamically.',
+  'REST APIs': 'Standardized endpoints facilitating decoupled frontend and backend communication.',
+  'JWT Authentication': 'Zero-session authentication system exchanging signed cryptographic keys.',
+  RBAC: 'Role-Based Access Control enforcing strict user permission levels.',
+  'Multi-Tenancy': 'Architectural partitioning ensuring strict isolated data lines for separate SaaS clients.',
+  WebSockets: 'Establish full-duplex TCP channels for continuous sub-second data streaming.',
+  'Responsive Design': 'Fluid layout scaling ensuring adaptability on mobile, tablet, and desktop monitors.',
+  'Scalable Systems': 'Infrastructure design targeting consistent query speeds under heavy user spikes.',
+  NumPy: 'Performs vector calculations and linear algebra operations at hardware speeds.',
+  Pandas: 'Tabular data analysis handling complex cleaning and data transformations.',
+  SciPy: 'Scientific numerical integration and Fourier transform filtering.',
+  'Scikit-learn': 'Fits machine learning regression models and fits recommendation engines.',
+  OpenCV: 'Tracks face ROIs and extracts capillary light signals in real-time camera frames.',
+  Matplotlib: 'Generates mathematical charts and data plots for diagnostics.',
+};
+
 export default function Skills() {
+  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -98,28 +141,61 @@ export default function Skills() {
             <motion.div
               variants={cardVariants}
               key={idx}
-              className="glass-card glass-card-hover p-6 rounded-2xl border border-white/5 flex flex-col h-full group"
+              className="gradient-border-card p-6 flex flex-col justify-between h-full group hover:shadow-[0_0_25px_rgba(99,102,241,0.08)] transition-all duration-300 min-h-[220px]"
             >
-              {/* Card Header */}
-              <div className="flex items-center gap-3.5 mb-5">
-                <div className={`p-2.5 rounded-xl bg-gradient-to-tr ${category.color.split(' ')[0]} ${category.color.split(' ')[1]} border border-white/5`}>
-                  <category.icon className={`w-5 h-5 ${category.color.split(' ')[2]}`} />
+              <div>
+                {/* Card Header */}
+                <div className="flex items-center gap-3.5 mb-5">
+                  <div className={`p-2.5 rounded-xl bg-gradient-to-tr ${category.color.split(' ')[0]} ${category.color.split(' ')[1]} border border-white/5`}>
+                    <category.icon className={`w-5 h-5 ${category.color.split(' ')[2]}`} />
+                  </div>
+                  <h3 className="text-white font-bold text-base tracking-wide group-hover:text-indigo-300 transition-colors duration-300">
+                    {category.title}
+                  </h3>
                 </div>
-                <h3 className="text-white font-bold text-base tracking-wide group-hover:text-indigo-300 transition-colors duration-300">
-                  {category.title}
-                </h3>
+
+                {/* Skills List tags */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {category.skills.map((skill, sIdx) => {
+                    const isHovered = hoveredSkill === skill;
+                    return (
+                      <span
+                        key={sIdx}
+                        onMouseEnter={() => setHoveredSkill(skill)}
+                        onMouseLeave={() => setHoveredSkill(null)}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-medium border cursor-pointer select-none transition-all duration-200 ${
+                          isHovered
+                            ? 'bg-indigo-500/25 border-indigo-500/40 text-white shadow-[0_0_12px_rgba(99,102,241,0.3)] scale-105'
+                            : 'bg-white/5 border-white/5 text-gray-300 hover:bg-white/10 hover:border-white/15 hover:text-white'
+                        }`}
+                      >
+                        {skill}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* Skills List tags */}
-              <div className="flex flex-wrap gap-2 mt-auto">
-                {category.skills.map((skill, sIdx) => (
-                  <span
-                    key={sIdx}
-                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-gray-300 border border-white/5 hover:border-white/15 hover:text-white transition-all duration-200 select-none"
-                  >
-                    {skill}
-                  </span>
-                ))}
+              {/* Dynamic Interactive Detail Console */}
+              <div className="border-t border-white/5 pt-3.5 mt-3 min-h-[50px] flex items-center">
+                <AnimatePresence mode="wait">
+                  {hoveredSkill ? (
+                    <motion.p
+                      key={hoveredSkill}
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 5 }}
+                      transition={{ duration: 0.15 }}
+                      className="text-[11px] font-mono leading-relaxed text-indigo-300"
+                    >
+                      <span className="text-cyan-400 font-bold">&gt;&gt;</span> {skillDescriptions[hoveredSkill]}
+                    </motion.p>
+                  ) : (
+                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest leading-none select-none">
+                      Hover tags for details
+                    </p>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           ))}
