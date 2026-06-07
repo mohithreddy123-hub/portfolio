@@ -9,13 +9,44 @@ const Github = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const Brain = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
+    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3 3 0 0 1 0-3.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2z" />
+    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-3.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2z" />
+  </svg>
+);
+
+const Sparkles = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+    <path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5.5 5 3Z" className="opacity-60" />
+    <path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5Z" className="opacity-60" />
+  </svg>
+);
+
+const PinIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
+    <line x1="12" y1="17" x2="12" y2="22" />
+    <path d="M5 17h14v-1.76a2 2 0 0 0-.44-1.24l-2.78-3.55A2 2 0 0 1 15 9.2V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4.2a2 2 0 0 1-.78 1.25l-2.78 3.55A2 2 0 0 0 5 15.24z" />
+  </svg>
+);
+
+const ArchiveIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
+    <polyline points="21 8 21 21 3 21 3 8" />
+    <rect x="1" y="3" width="22" height="5" rx="1" />
+    <line x1="10" y1="12" x2="14" y2="12" />
+  </svg>
+);
+
 type TabType = 'overview' | 'architecture' | 'simulator';
 
 export default function Projects() {
-  const [activeProject, setActiveProject] = useState<'tenantvault' | 'facevitals' | 'tracknest'>('tenantvault');
+  const [activeProject, setActiveProject] = useState<'tenantvault' | 'facevitals' | 'tracknest' | 'ainotes'>('tenantvault');
   const [tenantVaultTab, setTenantVaultTab] = useState<TabType>('overview');
   const [faceVitalsTab, setFaceVitalsTab] = useState<TabType>('overview');
   const [trackNestTab, setTrackNestTab] = useState<TabType>('overview');
+  const [aiNotesTab, setAiNotesTab] = useState<TabType>('overview');
 
   // Simulator States for TrackNest
   const [tasks, setTasks] = useState([
@@ -92,6 +123,104 @@ export default function Projects() {
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Simulator States for AI Notes Workspace
+  const [noteTitle, setNoteTitle] = useState('Draft SaaS Launch Plan');
+  const [noteContent, setNoteContent] = useState(
+    "We need to set up Render web services for Django. Let's configure JWT refresh interval to 1 day. Check if the database scales to 10k reads. Create a standard billing route for monthly subscribers. Also, finalize the marketing templates by Friday."
+  );
+  
+  const [saveStatus, setSaveStatus] = useState<'Saved' | 'Saving...' | 'Modified'>('Saved');
+  const [activeTags, setActiveTags] = useState<string[]>(['#SaaS', '#Database']);
+  const [isPinned, setIsPinned] = useState(true);
+  const [isArchived, setIsArchived] = useState(false);
+
+  const [isGeneratingTitle, setIsGeneratingTitle] = useState(false);
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [isExtractingActions, setIsExtractingActions] = useState(false);
+
+  const [aiSuggestedTitle, setAiSuggestedTitle] = useState<string | null>(null);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [aiActionItems, setAiActionItems] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    if (noteTitle === 'Draft SaaS Launch Plan' && noteContent.startsWith("We need to set up Render")) {
+      return;
+    }
+    
+    setSaveStatus('Saving...');
+    const timer = setTimeout(() => {
+      setSaveStatus('Saved');
+    }, 800);
+    
+    return () => clearTimeout(timer);
+  }, [noteTitle, noteContent]);
+
+  const handleSuggestTitle = () => {
+    if (isGeneratingTitle) return;
+    setIsGeneratingTitle(true);
+    setAiSuggestedTitle(null);
+    
+    setTimeout(() => {
+      setIsGeneratingTitle(false);
+      const text = noteContent.toLowerCase();
+      if (text.includes('database') || text.includes('scales')) {
+        setAiSuggestedTitle('SaaS Launch: High-Performance Database & Deployment Plan');
+      } else if (text.includes('billing') || text.includes('subscribers')) {
+        setAiSuggestedTitle('Stripe Billing Integration & Customer Routes');
+      } else {
+        setAiSuggestedTitle('AI Notes: Development & Infrastructure Roadmap');
+      }
+    }, 1000);
+  };
+
+  const handleGenerateSummary = () => {
+    if (isGeneratingSummary) return;
+    setIsGeneratingSummary(true);
+    setAiSummary(null);
+    
+    setTimeout(() => {
+      setIsGeneratingSummary(false);
+      const text = noteContent.toLowerCase();
+      let summary = "This note summarizes the deployment workflow for a Django-based SaaS product, emphasizing Render node scaling and JWT auth duration. ";
+      if (text.includes('10k') || text.includes('scales')) {
+        summary += "It includes executing Neon database queries to verify 10,000 read operations. ";
+      }
+      summary += "Also outlines deliverables for marketing assets and Stripe subscription configurations.";
+      setAiSummary(summary);
+    }, 1200);
+  };
+
+  const handleExtractActions = () => {
+    if (isExtractingActions) return;
+    setIsExtractingActions(true);
+    setAiActionItems(null);
+    
+    setTimeout(() => {
+      setIsExtractingActions(false);
+      const items: string[] = [];
+      const text = noteContent.toLowerCase();
+      if (text.includes('render') || text.includes('django')) {
+        items.push('Deploy Django REST backend services on Render.');
+      }
+      if (text.includes('jwt')) {
+        items.push('Configure JWT session duration to 24 hours (with rotation).');
+      }
+      if (text.includes('reads') || text.includes('database')) {
+        items.push('Perform load tests for Neon/MySQL database at 10,000 requests.');
+      }
+      if (text.includes('billing') || text.includes('subscribers')) {
+        items.push('Build Stripe-compatible billing integration routes.');
+      }
+      if (text.includes('marketing') || text.includes('friday')) {
+        items.push('Finalize marketing landing page assets before Friday EOD.');
+      }
+      if (items.length === 0) {
+        items.push('Review notes for actionable insights.', 'Organize tags and update public sharing status.');
+      }
+      setAiActionItems(items);
+    }, 1500);
+  };
 
   // Parallax transform based on section scroll progress
   const { scrollYProgress } = useScroll({
@@ -232,10 +361,10 @@ export default function Projects() {
 
         {/* Project Selector Tabs */}
         <div className="flex justify-center mb-12">
-          <div className="bg-white/5 border border-white/5 p-1 rounded-2xl flex max-w-2xl w-full relative z-20">
+          <div className="bg-white/5 border border-white/5 p-1.5 rounded-2xl grid grid-cols-2 lg:grid-cols-4 max-w-4xl w-full relative z-20 gap-1.5 md:gap-2.5">
             <button
               onClick={() => setActiveProject('tenantvault')}
-              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer ${
+              className={`py-3 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-xs md:text-sm ${
                 activeProject === 'tenantvault'
                   ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-600/30'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -246,7 +375,7 @@ export default function Projects() {
             </button>
             <button
               onClick={() => setActiveProject('facevitals')}
-              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer ${
+              className={`py-3 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-xs md:text-sm ${
                 activeProject === 'facevitals'
                   ? 'bg-gradient-to-r from-cyan-600 to-cyan-500 text-white shadow-lg shadow-cyan-600/30'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -257,7 +386,7 @@ export default function Projects() {
             </button>
             <button
               onClick={() => setActiveProject('tracknest')}
-              className={`flex-1 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer ${
+              className={`py-3 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-xs md:text-sm ${
                 activeProject === 'tracknest'
                   ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-600/30'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -265,6 +394,17 @@ export default function Projects() {
             >
               <ClipboardList className="w-4 h-4" />
               TrackNest Dashboard
+            </button>
+            <button
+              onClick={() => setActiveProject('ainotes')}
+              className={`py-3 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-xs md:text-sm ${
+                activeProject === 'ainotes'
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-600/30'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Brain className="w-4 h-4" />
+              AI Notes Workspace
             </button>
           </div>
         </div>
@@ -932,6 +1072,340 @@ export default function Projects() {
                   {/* Tech stack badge list */}
                   <div className="flex flex-wrap gap-2 mt-4">
                     {['React.js', 'Django REST Framework', 'MySQL', 'SimpleJWT', 'Axios', 'Gunicorn', 'WhiteNoise', 'Render'].map((tech) => (
+                      <span key={tech} className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-gray-300">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Project 4: AI Notes Workspace */}
+            {activeProject === 'ainotes' && (
+              <motion.div
+                key="ainotes"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
+              >
+                {/* Info and Navigation Column */}
+                <div className="lg:col-span-6 flex flex-col justify-between">
+                  <div>
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/25 bg-purple-500/10 text-purple-300 text-xs font-semibold mb-4">
+                      <span>Intelligence-Driven SaaS Workspace</span>
+                    </div>
+
+                    <h3 className="text-2xl md:text-3.5xl font-extrabold text-white mb-4">
+                      AI Notes Workspace
+                    </h3>
+
+                    <p className="text-gray-300 text-base md:text-lg mb-6 leading-relaxed">
+                      A production-ready note-taking platform integrated with Google Gemini AI. 
+                      Transform ordinary markdown writing into summaries, checklists, and 
+                      snappy title suggestions with debounced saving and analytics log tracing.
+                    </p>
+
+                    {/* Tab Navigation for details */}
+                    <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                      {(['overview', 'architecture', 'simulator'] as TabType[]).map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setAiNotesTab(tab)}
+                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                            aiNotesTab === tab
+                              ? 'bg-white/10 text-white border border-white/10'
+                              : 'text-gray-500 hover:text-gray-300 border border-transparent'
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Tab Contents */}
+                    <div className="min-h-[220px]">
+                      {aiNotesTab === 'overview' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Key Technical Features:</h4>
+                          <ul className="space-y-2.5 text-gray-400 text-sm">
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-purple-400 font-bold">✓</span>
+                              <span><strong>Gemini AI API Orchestration:</strong> Auto-generates summaries, action checklist lists, and titles based on contextual content scanning.</span>
+                            </li>
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-purple-400 font-bold">✓</span>
+                              <span><strong>Debounced Auto-Save Logic:</strong> Handcrafted React hook schedules background updates, syncing text edits to DB without blocking typing.</span>
+                            </li>
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-purple-400 font-bold">✓</span>
+                              <span><strong>Secure Public Sharing Hub:</strong> Allows sharing unique URL nodes mapping to stateless backend read paths with access counters.</span>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+
+                      {aiNotesTab === 'architecture' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">System Architecture:</h4>
+                          <div className="grid grid-cols-2 gap-4 text-xs">
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-purple-400 font-semibold block mb-1">Frontend Layer</span>
+                              Vite SPA running React 18, Axios middleware interceptors, and TanStack React Query for reliable caching.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-purple-400 font-semibold block mb-1">DRF REST Core</span>
+                              Django REST Framework powering CRUD models, usage log auditing endpoints, and custom exception handler scopes.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-purple-400 font-semibold block mb-1">Google Generative AI</span>
+                              Direct API connectors with token consumption monitoring logging to models.py logs.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-purple-400 font-semibold block mb-1">Persistent Node</span>
+                              SQLite / PostgreSQL schemas parsing complex metadata constraints, tags, and secure JWT relations.
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {aiNotesTab === 'simulator' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Interactive Demo Details:</h4>
+                          <p className="text-gray-400 text-xs leading-relaxed">
+                            Write notes in the editor panel on the right. Modify the title and see the auto-save trigger automatically. Use the AI Action toolbar to prompt Gemini to rewrite titles, draft bullet items, or summarize text.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex flex-wrap items-center gap-4 mt-8">
+                    <a
+                      href="https://github.com/mohithreddy123-hub/AI-Notes-Workspace"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white flex items-center gap-2 font-bold text-sm transition-all duration-200"
+                    >
+                      <Github className="w-4 h-4" />
+                      GitHub Code
+                    </a>
+                  </div>
+                </div>
+
+                {/* Simulated Screen / Visual Column */}
+                <div className="lg:col-span-6 flex flex-col items-stretch">
+                  <div className="bg-dark-950 border border-white/5 rounded-2xl flex flex-col flex-grow overflow-hidden shadow-inner">
+                    
+                    {/* Console Header */}
+                    <div className="bg-white/5 px-4 py-3 border-b border-white/5 flex items-center justify-between font-mono text-[11px]">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                        <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                        <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                      </div>
+                      
+                      {/* Note Title Input simulator */}
+                      <input
+                        type="text"
+                        value={noteTitle}
+                        onChange={(e) => setNoteTitle(e.target.value)}
+                        className="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-white outline-none focus:border-purple-500/30 text-[10px] w-1/3 text-center truncate font-sans font-bold"
+                        placeholder="Untitled Note"
+                      />
+
+                      <span className="flex items-center gap-1.5 font-bold">
+                        <span className={`w-1.5 h-1.5 rounded-full ${saveStatus === 'Saved' ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
+                        <span className={`text-[10px] font-mono ${saveStatus === 'Saved' ? 'text-emerald-400' : 'text-amber-400'}`}>{saveStatus.toUpperCase()}</span>
+                      </span>
+                    </div>
+
+                    {/* Workspace layout split */}
+                    <div className="flex flex-col sm:flex-row flex-grow min-h-[340px]">
+                      
+                      {/* Left: Note editing & responses */}
+                      <div className="flex-grow p-4 flex flex-col gap-3 min-h-[220px]">
+                        {/* Prompt Input Area */}
+                        <div className="flex flex-wrap items-center gap-1.5 bg-white/5 p-1.5 rounded-xl border border-white/5">
+                          <button
+                            onClick={handleSuggestTitle}
+                            disabled={isGeneratingTitle}
+                            className="px-2.5 py-1.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 text-purple-300 text-[10px] font-bold flex items-center gap-1.5 cursor-pointer transition-all duration-200"
+                          >
+                            <Sparkles className="w-3.5 h-3.5" />
+                            {isGeneratingTitle ? 'Analyzing...' : 'Suggest Title'}
+                          </button>
+                          <button
+                            onClick={handleGenerateSummary}
+                            disabled={isGeneratingSummary}
+                            className="px-2.5 py-1.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 text-purple-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all duration-200"
+                          >
+                            {isGeneratingSummary ? '🤖 Processing...' : '🤖 Summarize'}
+                          </button>
+                          <button
+                            onClick={handleExtractActions}
+                            disabled={isExtractingActions}
+                            className="px-2.5 py-1.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 text-purple-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all duration-200"
+                          >
+                            {isExtractingActions ? '✅ Extracting...' : '✅ Tasks'}
+                          </button>
+                        </div>
+
+                        {/* Text Editor content */}
+                        <textarea
+                          value={noteContent}
+                          onChange={(e) => setNoteContent(e.target.value)}
+                          className="flex-grow w-full bg-white/5 border border-white/5 rounded-xl p-3 text-[11px] text-gray-300 outline-none focus:border-purple-500/30 resize-none font-sans min-h-[120px] max-h-[140px] leading-relaxed"
+                          placeholder="Write something in your workspace..."
+                        />
+
+                        {/* AI Responses Display */}
+                        <div className="space-y-2 mt-1">
+                          {/* Suggested Title Response */}
+                          {aiSuggestedTitle && (
+                            <div className="p-2 rounded-xl bg-purple-950/20 border border-purple-500/15 text-[10px] flex items-center justify-between text-purple-300">
+                              <div className="truncate pr-2">
+                                <span className="font-semibold">Gemini Title: </span>
+                                <span className="italic">"{aiSuggestedTitle}"</span>
+                              </div>
+                              <button
+                                onClick={() => {
+                                  setNoteTitle(aiSuggestedTitle);
+                                  setAiSuggestedTitle(null);
+                                }}
+                                className="px-2 py-0.5 rounded bg-purple-600 hover:bg-purple-500 text-white text-[8px] font-bold cursor-pointer flex-shrink-0"
+                              >
+                                Apply
+                              </button>
+                            </div>
+                          )}
+
+                          {/* Summary Response */}
+                          {aiSummary && (
+                            <div className="p-2.5 rounded-xl bg-purple-950/20 border border-purple-500/15 text-[10px] text-gray-300 leading-relaxed relative">
+                              <span className="text-purple-400 font-bold block mb-1">🤖 Gemini Summary:</span>
+                              {aiSummary}
+                              <button
+                                onClick={() => setAiSummary(null)}
+                                className="absolute top-1 right-2 text-gray-500 hover:text-gray-300 text-[9px] cursor-pointer"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          )}
+
+                          {/* Action Items Response */}
+                          {aiActionItems && (
+                            <div className="p-2.5 rounded-xl bg-purple-950/20 border border-purple-500/15 text-[10px] text-gray-300 relative">
+                              <span className="text-purple-400 font-bold block mb-1.5">✅ Extracted Tasks:</span>
+                              <div className="space-y-1">
+                                {aiActionItems.map((item, index) => (
+                                  <label key={index} className="flex items-start gap-2 cursor-pointer hover:text-white">
+                                    <input type="checkbox" className="accent-purple-500 mt-0.5 flex-shrink-0" />
+                                    <span>{item}</span>
+                                  </label>
+                                ))}
+                              </div>
+                              <button
+                                onClick={() => setAiActionItems(null)}
+                                className="absolute top-1 right-2 text-gray-500 hover:text-gray-300 text-[9px] cursor-pointer"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Right: Metadata sidebar & chart */}
+                      <div className="w-full sm:w-52 bg-white/5 border-t sm:border-t-0 sm:border-l border-white/5 p-4 flex flex-col justify-between gap-4">
+                        
+                        {/* Options: Pins and Archives */}
+                        <div>
+                          <div className="flex items-center justify-between mb-3 pb-1 border-b border-white/5">
+                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Metadata</span>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => setIsPinned(!isPinned)}
+                                className={`p-1 rounded cursor-pointer transition-all duration-200 ${isPinned ? 'text-amber-400 bg-amber-400/10' : 'text-gray-500 hover:text-gray-300'}`}
+                                title={isPinned ? 'Unpin note' : 'Pin note'}
+                              >
+                                <PinIcon className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => setIsArchived(!isArchived)}
+                                className={`p-1 rounded cursor-pointer transition-all duration-200 ${isArchived ? 'text-cyan-400 bg-cyan-400/10' : 'text-gray-500 hover:text-gray-300'}`}
+                                title={isArchived ? 'Unarchive note' : 'Archive note'}
+                              >
+                                <ArchiveIcon className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Tags Section */}
+                          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-1.5">Smart Tags</span>
+                          <div className="flex flex-wrap gap-1">
+                            {['#SaaS', '#AI', '#Database', '#Tasks', '#Tutorial'].map((tag) => {
+                              const isSelected = activeTags.includes(tag);
+                              return (
+                                <button
+                                  key={tag}
+                                  onClick={() => {
+                                    setActiveTags(prev =>
+                                      isSelected ? prev.filter(t => t !== tag) : [...prev, tag]
+                                    );
+                                  }}
+                                  className={`px-2 py-0.5 rounded text-[8px] font-bold border transition-all duration-200 cursor-pointer ${
+                                    isSelected
+                                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                                      : 'bg-white/5 text-gray-500 border-transparent hover:text-gray-400'
+                                  }`}
+                                >
+                                  {tag}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* SVG Token Chart */}
+                        <div className="mt-2">
+                          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Weekly Gemini API Usage</span>
+                          <div className="flex items-end justify-between h-20 bg-white/5 border border-white/5 rounded-xl p-2">
+                            {[
+                              { day: 'M', tokens: '40%' },
+                              { day: 'T', tokens: '75%' },
+                              { day: 'W', tokens: '20%' },
+                              { day: 'T', tokens: '90%' },
+                              { day: 'F', tokens: '55%' },
+                              { day: 'S', tokens: '15%' },
+                              { day: 'S', tokens: '30%' }
+                            ].map((bar, idx) => (
+                              <div key={idx} className="flex flex-col items-center flex-grow group">
+                                <div className="w-2.5 bg-white/10 rounded-t h-16 relative flex items-end overflow-hidden">
+                                  <div
+                                    className="w-full bg-gradient-to-t from-purple-600 to-indigo-500 rounded-t transition-all duration-500 group-hover:opacity-85"
+                                    style={{ height: bar.tokens }}
+                                  />
+                                </div>
+                                <span className="text-[8px] text-gray-500 font-mono mt-1 font-bold">{bar.day}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Tech stack badge list */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {['React 18', 'Django 5.0.6', 'Google Gemini AI', 'SimpleJWT', 'PostgreSQL', 'Vite', 'Tailwind CSS', 'Axios', 'Render'].map((tech) => (
                       <span key={tech} className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-gray-300">
                         {tech}
                       </span>
