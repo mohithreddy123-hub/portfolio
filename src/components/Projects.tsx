@@ -1194,6 +1194,15 @@ export default function Projects() {
                       <Github className="w-4 h-4" />
                       GitHub Code
                     </a>
+                    <a
+                      href="https://ai-notes-workspace-beta.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-all duration-200"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Live Application
+                    </a>
                   </div>
                 </div>
 
