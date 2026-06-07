@@ -70,7 +70,7 @@ export default function Projects() {
     
     setTimeout(() => {
       setSimFileEncrypting(false);
-      setSimEncryptResult(`Success! Encrpyted via zero-knowledge AES-128. Response: HTTP 202 (182ms).`);
+      setSimEncryptResult(`Success! Encrypted via zero-knowledge AES-128. Response: HTTP 202 (182ms).`);
       setConsoleLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] [CRYPTO] Document encrypted and saved. UUID: enc_doc_${Math.random().toString(36).substring(7)}`]);
     }, 1200);
   };
