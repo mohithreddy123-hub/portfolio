@@ -1,42 +1,48 @@
 import { motion } from 'framer-motion';
-import { Layout, Server, Database, Cloud, Brain, ShieldAlert } from 'lucide-react';
+import { Code2, Layout, Server, Database, Cloud, ShieldAlert, Brain } from 'lucide-react';
 
 const skillCategories = [
   {
-    title: 'Frontend Development',
+    title: 'Languages',
+    icon: Code2,
+    color: 'from-blue-500/20 to-indigo-500/20 text-blue-400',
+    skills: ['Python', 'JavaScript'],
+  },
+  {
+    title: 'Frontend',
     icon: Layout,
     color: 'from-cyan-500/20 to-blue-500/20 text-cyan-400',
-    skills: ['React.js', 'HTML5 & CSS3', 'Tailwind CSS', 'Streamlit', 'Responsive Design', 'SaaS Client Interfaces'],
+    skills: ['React.js', 'HTML5', 'CSS3', 'Tailwind CSS', 'Streamlit'],
   },
   {
-    title: 'Backend Engineering',
+    title: 'Backend',
     icon: Server,
     color: 'from-indigo-500/20 to-purple-500/20 text-indigo-400',
-    skills: ['FastAPI', 'Django & DRF', 'Flask', 'Django Channels', 'Celery Workers', 'Daphne / Web Sockets', 'Redis Caching'],
+    skills: ['Django', 'Django REST Framework', 'Flask', 'FastAPI', 'Django Channels', 'Celery', 'Daphne', 'Redis'],
   },
   {
-    title: 'Databases & Storage',
+    title: 'Databases',
     icon: Database,
     color: 'from-emerald-500/20 to-teal-500/20 text-emerald-400',
-    skills: ['PostgreSQL', 'MySQL', 'SQLite', 'Neon DB (Serverless)', 'Cloudinary Media Storage', 'Schema Migration'],
+    skills: ['PostgreSQL', 'MySQL', 'SQLite'],
   },
   {
     title: 'DevOps & Cloud',
     icon: Cloud,
     color: 'from-amber-500/20 to-orange-500/20 text-amber-400',
-    skills: ['Git & GitHub', 'Vercel Deployment', 'Render Hosting', 'Docker (Job Simulations)', 'AWS Architecture', 'CI/CD Pipelines'],
+    skills: ['Git', 'GitHub', 'Vercel', 'Render', 'Cloudinary'],
   },
   {
-    title: 'Data & Machine Learning',
-    icon: Brain,
-    color: 'from-pink-500/20 to-rose-500/20 text-pink-400',
-    skills: ['Python (A+ Grade Training)', 'NumPy & Pandas', 'SciPy & Scikit-learn', 'OpenCV (Computer Vision)', 'Matplotlib', 'rPPG Signal Analysis'],
-  },
-  {
-    title: 'Architecture & Security',
+    title: 'Architecture',
     icon: ShieldAlert,
     color: 'from-violet-500/20 to-fuchsia-500/20 text-violet-400',
-    skills: ['RESTful API Design', 'JWT Token Auth', 'Role-Based Access (RBAC)', 'Multi-Tenancy Isolation', 'Zero-Knowledge Encryption', 'AuditLog Tracking'],
+    skills: ['REST APIs', 'JWT Authentication', 'RBAC', 'Multi-Tenancy', 'WebSockets', 'Responsive Design', 'Scalable Systems'],
+  },
+  {
+    title: 'Data & ML',
+    icon: Brain,
+    color: 'from-pink-500/20 to-rose-500/20 text-pink-400',
+    skills: ['NumPy', 'Pandas', 'SciPy', 'Scikit-learn', 'OpenCV', 'Matplotlib'],
   },
 ];
 
@@ -46,17 +52,17 @@ export default function Skills() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.08,
       },
     },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' },
+      transition: { duration: 0.4, ease: 'easeOut' },
     },
   } as const;
 
@@ -86,30 +92,30 @@ export default function Skills() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {skillCategories.map((category, idx) => (
             <motion.div
               variants={cardVariants}
               key={idx}
-              className="glass-card glass-card-hover p-8 rounded-2xl border border-white/5 flex flex-col h-full group"
+              className="glass-card glass-card-hover p-6 rounded-2xl border border-white/5 flex flex-col h-full group"
             >
               {/* Card Header */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className={`p-3 rounded-xl bg-gradient-to-tr ${category.color.split(' ')[0]} ${category.color.split(' ')[1]} border border-white/5`}>
-                  <category.icon className={`w-6 h-6 ${category.color.split(' ')[2]}`} />
+              <div className="flex items-center gap-3.5 mb-5">
+                <div className={`p-2.5 rounded-xl bg-gradient-to-tr ${category.color.split(' ')[0]} ${category.color.split(' ')[1]} border border-white/5`}>
+                  <category.icon className={`w-5 h-5 ${category.color.split(' ')[2]}`} />
                 </div>
-                <h3 className="text-white font-bold text-lg tracking-wide group-hover:text-indigo-300 transition-colors duration-300">
+                <h3 className="text-white font-bold text-base tracking-wide group-hover:text-indigo-300 transition-colors duration-300">
                   {category.title}
                 </h3>
               </div>
 
               {/* Skills List tags */}
-              <div className="flex flex-wrap gap-2.5 mt-auto">
+              <div className="flex flex-wrap gap-2 mt-auto">
                 {category.skills.map((skill, sIdx) => (
                   <span
                     key={sIdx}
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-gray-300 border border-white/5 hover:border-white/15 hover:text-white transition-all duration-200 select-none"
+                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-gray-300 border border-white/5 hover:border-white/15 hover:text-white transition-all duration-200 select-none"
                   >
                     {skill}
                   </span>
