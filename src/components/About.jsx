@@ -41,7 +41,7 @@ export default function About() {
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
-  } as const;
+  };
 
   return (
     <section id="about" className="py-24 relative overflow-hidden bg-dark-900">

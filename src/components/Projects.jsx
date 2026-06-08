@@ -2,21 +2,21 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ExternalLink, ShieldCheck, Cpu, Settings, ClipboardList, Wallet } from 'lucide-react';
 
-const Github = (props: React.SVGProps<SVGSVGElement>) => (
+const Github = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
     <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
     <path d="M9 18c-4.51 2-5-2-7-2" />
   </svg>
 );
 
-const Brain = (props: React.SVGProps<SVGSVGElement>) => (
+const Brain = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
     <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3 3 0 0 1 0-3.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2z" />
     <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-3.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2z" />
   </svg>
 );
 
-const Sparkles = (props: React.SVGProps<SVGSVGElement>) => (
+const Sparkles = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
     <path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5.5 5 3Z" className="opacity-60" />
@@ -24,14 +24,14 @@ const Sparkles = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const PinIcon = (props: React.SVGProps<SVGSVGElement>) => (
+const PinIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
     <line x1="12" y1="17" x2="12" y2="22" />
     <path d="M5 17h14v-1.76a2 2 0 0 0-.44-1.24l-2.78-3.55A2 2 0 0 1 15 9.2V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4.2a2 2 0 0 1-.78 1.25l-2.78 3.55A2 2 0 0 0 5 15.24z" />
   </svg>
 );
 
-const ArchiveIcon = (props: React.SVGProps<SVGSVGElement>) => (
+const ArchiveIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
     <polyline points="21 8 21 21 3 21 3 8" />
     <rect x="1" y="3" width="22" height="5" rx="1" />
@@ -39,14 +39,12 @@ const ArchiveIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-type TabType = 'overview' | 'architecture' | 'simulator';
-
 export default function Projects() {
-  const [activeProject, setActiveProject] = useState<'tenantvault' | 'facevitals' | 'tracknest' | 'ainotes'>('tenantvault');
-  const [tenantVaultTab, setTenantVaultTab] = useState<TabType>('overview');
-  const [faceVitalsTab, setFaceVitalsTab] = useState<TabType>('overview');
-  const [trackNestTab, setTrackNestTab] = useState<TabType>('overview');
-  const [aiNotesTab, setAiNotesTab] = useState<TabType>('overview');
+  const [activeProject, setActiveProject] = useState('tenantvault');
+  const [tenantVaultTab, setTenantVaultTab] = useState('overview');
+  const [faceVitalsTab, setFaceVitalsTab] = useState('overview');
+  const [trackNestTab, setTrackNestTab] = useState('overview');
+  const [aiNotesTab, setAiNotesTab] = useState('overview');
 
   // Simulator States for TrackNest
   const [tasks, setTasks] = useState([
@@ -64,7 +62,7 @@ export default function Projects() {
   const [newExpenseName, setNewExpenseName] = useState('');
   const [newExpenseAmount, setNewExpenseAmount] = useState('');
 
-  const handleAddTask = (e: React.FormEvent) => {
+  const handleAddTask = (e) => {
     e.preventDefault();
     if (!newTaskText.trim()) return;
     setTasks(prev => [
@@ -74,7 +72,7 @@ export default function Projects() {
     setNewTaskText('');
   };
 
-  const toggleTaskStatus = (id: number) => {
+  const toggleTaskStatus = (id) => {
     setTasks(prev => prev.map(t => {
       if (t.id === id) {
         const nextStatus = t.status === 'Pending' ? 'In Progress' : t.status === 'In Progress' ? 'Completed' : 'Pending';
@@ -84,7 +82,7 @@ export default function Projects() {
     }));
   };
 
-  const handleAddExpense = (e: React.FormEvent) => {
+  const handleAddExpense = (e) => {
     e.preventDefault();
     if (!newExpenseName.trim() || !newExpenseAmount.trim()) return;
     const amt = parseFloat(newExpenseAmount);
@@ -97,7 +95,7 @@ export default function Projects() {
     setNewExpenseAmount('');
   };
 
-  const handleDeleteExpense = (id: number) => {
+  const handleDeleteExpense = (id) => {
     setExpenses(prev => prev.filter(e => e.id !== id));
   };
 
@@ -105,24 +103,24 @@ export default function Projects() {
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   // Simulator States for TenantVault
-  const [consoleLogs, setConsoleLogs] = useState<string[]>([
+  const [consoleLogs, setConsoleLogs] = useState([
     'Initializing TenantVault core modules...',
     'Connecting to Neon serverless PostgreSQL database...',
     'Celery workers pool initialized: 4 active processes.',
     'Ready for incoming tenant requests.'
   ]);
-  const [simTenant, setSimTenant] = useState<'Enterprise' | 'Startup' | 'Developer'>('Developer');
+  const [simTenant, setSimTenant] = useState('Developer');
   const [simFileEncrypting, setSimFileEncrypting] = useState(false);
-  const [simEncryptResult, setSimEncryptResult] = useState<string | null>(null);
+  const [simEncryptResult, setSimEncryptResult] = useState(null);
 
   // Simulator States for FaceVitals
   const [heartRate, setHeartRate] = useState(72);
   const [respRate, setRespRate] = useState(16);
   const [signalQuality, setSignalQuality] = useState(94);
-  const [ppgPoints, setPpgPoints] = useState<number[]>([]);
+  const [ppgPoints, setPpgPoints] = useState([]);
   
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef(null);
+  const sectionRef = useRef(null);
 
   // Simulator States for AI Notes Workspace
   const [noteTitle, setNoteTitle] = useState('Draft SaaS Launch Plan');
@@ -130,8 +128,8 @@ export default function Projects() {
     "We need to set up Render web services for Django. Let's configure JWT refresh interval to 1 day. Check if the database scales to 10k reads. Create a standard billing route for monthly subscribers. Also, finalize the marketing templates by Friday."
   );
   
-  const [saveStatus, setSaveStatus] = useState<'Saved' | 'Saving...' | 'Modified'>('Saved');
-  const [activeTags, setActiveTags] = useState<string[]>(['#SaaS', '#Database']);
+  const [saveStatus, setSaveStatus] = useState('Saved');
+  const [activeTags, setActiveTags] = useState(['#SaaS', '#Database']);
   const [isPinned, setIsPinned] = useState(true);
   const [isArchived, setIsArchived] = useState(false);
 
@@ -139,9 +137,9 @@ export default function Projects() {
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [isExtractingActions, setIsExtractingActions] = useState(false);
 
-  const [aiSuggestedTitle, setAiSuggestedTitle] = useState<string | null>(null);
-  const [aiSummary, setAiSummary] = useState<string | null>(null);
-  const [aiActionItems, setAiActionItems] = useState<string[] | null>(null);
+  const [aiSuggestedTitle, setAiSuggestedTitle] = useState(null);
+  const [aiSummary, setAiSummary] = useState(null);
+  const [aiActionItems, setAiActionItems] = useState(null);
 
   useEffect(() => {
     if (noteTitle === 'Draft SaaS Launch Plan' && noteContent.startsWith("We need to set up Render")) {
@@ -198,7 +196,7 @@ export default function Projects() {
     
     setTimeout(() => {
       setIsExtractingActions(false);
-      const items: string[] = [];
+      const items = [];
       const text = noteContent.toLowerCase();
       if (text.includes('render') || text.includes('django')) {
         items.push('Deploy Django REST backend services on Render.');
@@ -449,7 +447,7 @@ export default function Projects() {
 
                     {/* Tab Navigation for details */}
                     <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-                      {(['overview', 'architecture', 'simulator'] as TabType[]).map((tab) => (
+                      {['overview', 'architecture', 'simulator'].map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setTenantVaultTab(tab)}
@@ -564,7 +562,7 @@ export default function Projects() {
                       <div className="flex items-center gap-2">
                         <span className="text-gray-400 font-bold">Tenant Scope:</span>
                         <div className="flex gap-1">
-                          {(['Developer', 'Startup', 'Enterprise'] as const).map((tier) => (
+                          {['Developer', 'Startup', 'Enterprise'].map((tier) => (
                             <button
                               key={tier}
                               onClick={() => setSimTenant(tier)}
@@ -654,7 +652,7 @@ export default function Projects() {
 
                     {/* Tab Navigation for details */}
                     <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-                      {(['overview', 'architecture', 'simulator'] as TabType[]).map((tab) => (
+                      {['overview', 'architecture', 'simulator'].map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setFaceVitalsTab(tab)}
@@ -841,7 +839,7 @@ export default function Projects() {
 
                     {/* Tab Navigation for details */}
                     <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-                      {(['overview', 'architecture', 'simulator'] as TabType[]).map((tab) => (
+                      {['overview', 'architecture', 'simulator'].map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setTrackNestTab(tab)}
@@ -1111,7 +1109,7 @@ export default function Projects() {
 
                     {/* Tab Navigation for details */}
                     <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-                      {(['overview', 'architecture', 'simulator'] as TabType[]).map((tab) => (
+                      {['overview', 'architecture', 'simulator'].map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setAiNotesTab(tab)}
