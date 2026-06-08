@@ -32,7 +32,7 @@ export default function App() {
       touchMultiplier: 2.0,
     });
 
-    const raf = (time: number) => {
+    const raf = (time) => {
       lenis.raf(time);
       requestAnimationFrame(raf);
     };
@@ -40,7 +40,7 @@ export default function App() {
     requestAnimationFrame(raf);
 
     // 2. Mouse move listener for spotlight
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
