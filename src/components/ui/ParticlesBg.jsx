@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 export default function ParticlesBg() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -10,20 +10,13 @@ export default function ParticlesBg() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
-    let particles: Particle[] = [];
+    let animationFrameId;
+    let particles = [];
     const maxParticles = 80;
     const connectionDistance = 120;
-    const mouse = { x: null as number | null, y: null as number | null, radius: 150 };
+    const mouse = { x: null, y: null, radius: 150 };
 
     class Particle {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      color: string;
-
       constructor() {
         this.x = Math.random() * (canvas?.width || window.innerWidth);
         this.y = Math.random() * (canvas?.height || window.innerHeight);
@@ -112,7 +105,7 @@ export default function ParticlesBg() {
       init();
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
     };

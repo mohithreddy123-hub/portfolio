@@ -1,24 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import { useInView } from 'framer-motion';
 
-interface CounterProps {
-  value: number;
-  duration?: number; // duration in ms
-  decimals?: number;
-}
-
-export default function Counter({ value, duration = 1500, decimals = 0 }: CounterProps) {
+export default function Counter({ value, duration = 1500, decimals = 0 }) {
   const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
+  const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
 
   useEffect(() => {
     if (!isInView) return;
     
-    let startTime: number | null = null;
+    let startTime = null;
     const endValue = value;
 
-    const animateCount = (timestamp: number) => {
+    const animateCount = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
       

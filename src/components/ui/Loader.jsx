@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface LoaderProps {
-  onComplete: () => void;
-}
-
-export default function Loader({ onComplete }: LoaderProps) {
+export default function Loader({ onComplete }) {
   const [visible, setVisible] = useState(true);
   const firstName = 'MOHITH'.split('');
   const lastName = 'REDDY'.split('');
@@ -27,7 +23,7 @@ export default function Loader({ onComplete }: LoaderProps) {
         staggerChildren: 0.04,
       },
     },
-  } as const;
+  };
 
   const letterVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -40,7 +36,7 @@ export default function Loader({ onComplete }: LoaderProps) {
         stiffness: 100,
       },
     },
-  } as const;
+  };
 
   return (
     <AnimatePresence onExitComplete={onComplete}>
