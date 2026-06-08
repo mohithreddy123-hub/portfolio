@@ -48,7 +48,7 @@ const skillCategories = [
 ];
 
 // Dictionary of explanations for interactive tech stack reveal
-const skillDescriptions: Record<string, string> = {
+const skillDescriptions = {
   Python: 'Core programming language used for scripting, AI model training, and robust backend engineering.',
   JavaScript: 'Enables client-side reactivity and handles user events across frontend dashboards.',
   'React.js': 'Builds highly componentized interfaces using virtual DOM and state synchronization.',
@@ -88,7 +88,7 @@ const skillDescriptions: Record<string, string> = {
 };
 
 export default function Skills() {
-  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [hoveredSkill, setHoveredSkill] = useState(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -107,7 +107,7 @@ export default function Skills() {
       y: 0,
       transition: { duration: 0.4, ease: 'easeOut' },
     },
-  } as const;
+  };
 
   return (
     <section id="skills" className="py-24 relative overflow-hidden bg-dark-950">

@@ -69,7 +69,7 @@ export default function Certifications() {
       y: 0,
       transition: { duration: 0.5, ease: 'easeOut' }
     }
-  } as const;
+  };
 
   return (
     <section id="certifications" className="py-24 relative overflow-hidden bg-dark-900">

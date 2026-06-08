@@ -43,7 +43,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (e, href) => {
     e.preventDefault();
     setIsOpen(false);
     const target = document.querySelector(href);
