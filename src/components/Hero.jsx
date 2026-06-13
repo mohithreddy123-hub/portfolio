@@ -164,7 +164,8 @@ export default function Hero() {
 
           <Magnetic>
             <a
-              href="https://github.com/mohithreddy123-hub"
+              href="/Karnati_Mohith_Reddy_Resume.pdf"
+              download="Karnati_Mohith_Reddy_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 w-full sm:w-auto rounded-xl font-bold tracking-wide text-gray-300 hover:text-white glass-card hover:bg-white/10 hover:border-white/25 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5"
