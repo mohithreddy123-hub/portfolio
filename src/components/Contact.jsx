@@ -161,7 +161,7 @@ export default function Contact() {
                   LinkedIn
                 </a>
                 <a
-                  href="https://www.instagram.com/"
+                  href="https://www.instagram.com/mohith7512?igsh=MXBvaWE2bDRkcnR5Yw=="
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 py-3 px-4 rounded-xl bg-white/5 border border-white/5 hover:border-pink-500/30 text-gray-300 hover:text-pink-400 flex items-center justify-center gap-2 font-bold text-xs transition-all duration-200"

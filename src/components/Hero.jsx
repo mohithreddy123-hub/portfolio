@@ -210,7 +210,7 @@ export default function Hero() {
             <Linkedin className="w-5 h-5" />
           </a>
           <a
-            href="https://www.instagram.com/"
+            href="https://www.instagram.com/mohith7512?igsh=MXBvaWE2bDRkcnR5Yw=="
             target="_blank"
             rel="noopener noreferrer"
             className="p-3 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-white/30 hover:scale-110 transition-all duration-300"

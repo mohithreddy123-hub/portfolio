@@ -74,7 +74,7 @@ export default function Footer() {
               <Linkedin className="w-4 h-4" />
             </a>
             <a
-              href="https://www.instagram.com/"
+              href="https://www.instagram.com/mohith7512?igsh=MXBvaWE2bDRkcnR5Yw=="
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-500 hover:text-white transition-colors duration-200"
