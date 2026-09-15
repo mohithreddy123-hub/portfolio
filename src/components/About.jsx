@@ -70,13 +70,13 @@ export default function About() {
             className="lg:col-span-7 flex flex-col justify-center space-y-6 text-gray-300 text-lg leading-relaxed"
           >
             <p>
-              I am a <strong className="text-white">Full-Stack Software Engineer</strong> with a strong foundation in computer science and a passion for engineering scalable, secure systems. My engineering philosophy revolves around combining robust backend architectures with fluid, responsive user experiences and data-driven intelligence.
+              I am a <strong className="text-white">Computer Science Engineering graduate</strong> with hands-on experience building full-stack applications, REST APIs, AI/ML solutions, and LLM-powered systems.
             </p>
             <p>
-              During my engineering journey at Anurag University, I have focused on designing real-world solutions. From building <strong className="text-white">TenantVault</strong>, a production-grade multi-tenant SaaS platform featuring zero-knowledge AES-128 document encryption, to developing a non-contact heart and respiratory rate estimator via standard webcams, I thrive on solving complex engineering challenges.
+              Experienced with <strong className="text-white">Python, Django, FastAPI, React, SQL/NoSQL databases, and Gemini APIs</strong>, with practical work in <strong className="text-white">RAG (Retrieval-Augmented Generation), vector search, authentication, and real-time applications</strong>.
             </p>
             <p>
-              I specialize in combining modern backend frameworks like <strong className="text-white">FastAPI, Django, and Celery</strong> with state-of-the-art frontends using <strong className="text-white">React.js</strong>. I am certified by Microsoft and Oracle, with deep interests in Cloud Architecture, system security, and AI integrations.
+              From building <strong className="text-white">TenantVault</strong> (a multi-tenant SaaS platform with zero-knowledge AES-128 document encryption) and <strong className="text-white">QueryMind</strong> (a 5-stage Text-to-SQL RAG assistant using ChromaDB and MySQL) to developing contactless physiological monitoring in <strong className="text-white">FaceVitals</strong>, I specialize in building and testing end-to-end applications combining robust backend services, scalable databases, and Generative AI.
             </p>
           </motion.div>
 
@@ -117,13 +117,13 @@ export default function About() {
             {/* Card 3: Major Projects */}
             <div className="gradient-border-card p-6 flex flex-col justify-center min-h-[145px] hover:-translate-y-1.5 transition-transform duration-300 shadow-lg shadow-black/25">
               <span className="text-gray-400 text-xs font-semibold tracking-wider uppercase mb-1">
-                Major Projects
+                Featured Systems
               </span>
               <span className="text-white text-base md:text-lg font-bold tracking-tight mb-1 leading-snug">
-                TenantVault & FaceVitals
+                TenantVault &amp; QueryMind
               </span>
               <span className="text-indigo-300 text-xs font-medium">
-                SaaS & Computer Vision
+                SaaS &amp; GenAI RAG
               </span>
             </div>
 
