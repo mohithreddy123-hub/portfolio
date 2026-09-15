@@ -27,11 +27,11 @@ const certifications = [
     color: 'from-amber-600/20 to-yellow-500/20 text-amber-400 border-amber-600/20 shadow-amber-600/5',
   },
   {
-    title: 'AWS Solutions Architecture Simulation',
-    issuer: 'Forage',
-    year: '2025',
+    title: 'AWS Cloud Practitioner Essentials',
+    issuer: 'AWS Training & Certification',
+    year: '2026',
     icon: Cloud,
-    desc: 'Hands-on practice designing highly available, fault-tolerant architectures, VPC networking configuration, and serverless compute scaling (Lambda/ECS).',
+    desc: 'Foundational AWS cloud architecture, security, compute, networking, storage services, and high-availability deployment principles.',
     color: 'from-yellow-500/20 to-orange-400/20 text-yellow-400 border-yellow-500/20 shadow-yellow-500/5',
   },
   {
