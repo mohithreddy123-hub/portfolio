@@ -148,9 +148,8 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-gray-400 text-base md:text-xl max-w-2xl mb-12 leading-relaxed"
         >
-          I architect and ship secure, production-grade web systems and AI/ML applications. 
-          Specialized in multi-tenant SaaS infrastructures, zero-knowledge encryption, 
-          and computer vision workflows.
+          Computer Science Engineering graduate building full-stack applications, REST APIs, 
+          AI/ML solutions, and LLM-powered systems with RAG, vector search, and real-time architectures.
         </motion.p>
 
         {/* Action Call to Actions */}
