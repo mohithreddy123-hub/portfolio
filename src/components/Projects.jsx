@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ExternalLink, ShieldCheck, Cpu, Settings, ClipboardList, Wallet } from 'lucide-react';
+import { ExternalLink, ShieldCheck, Cpu, Settings, Flame, Database, Bot, CheckCircle2, ChevronRight, Terminal, Search, Send, RotateCcw, AlertTriangle, FileText, Check } from 'lucide-react';
 
 const Github = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
@@ -43,64 +43,105 @@ export default function Projects() {
   const [activeProject, setActiveProject] = useState('tenantvault');
   const [tenantVaultTab, setTenantVaultTab] = useState('overview');
   const [faceVitalsTab, setFaceVitalsTab] = useState('overview');
-  const [trackNestTab, setTrackNestTab] = useState('overview');
-  const [aiNotesTab, setAiNotesTab] = useState('overview');
+  const [resumeRoasterTab, setResumeRoasterTab] = useState('overview');
+  const [queryMindTab, setQueryMindTab] = useState('overview');
 
-  // Simulator States for TrackNest
-  const [tasks, setTasks] = useState([
-    { id: 1, text: 'Deploy Django API to Render', status: 'Completed' },
-    { id: 2, text: 'Set up MySQL database schemas', status: 'Completed' },
-    { id: 3, text: 'Configure JWT rotation interceptors', status: 'In Progress' },
-    { id: 4, text: 'Write React private route guards', status: 'Pending' }
-  ]);
-  const [expenses, setExpenses] = useState([
-    { id: 1, name: 'Server Hosting (Render)', amount: 20 },
-    { id: 2, name: 'Database instance (MySQL)', amount: 15 },
-    { id: 3, name: 'Domain Registration', amount: 12 }
-  ]);
-  const [newTaskText, setNewTaskText] = useState('');
-  const [newExpenseName, setNewExpenseName] = useState('');
-  const [newExpenseAmount, setNewExpenseAmount] = useState('');
-
-  const handleAddTask = (e) => {
-    e.preventDefault();
-    if (!newTaskText.trim()) return;
-    setTasks(prev => [
-      ...prev,
-      { id: Date.now(), text: newTaskText.trim(), status: 'Pending' }
-    ]);
-    setNewTaskText('');
+  // Simulator States for Resume Roaster
+  const resumeProfiles = {
+    mohith: {
+      name: 'Mohith Reddy (Full-Stack & Systems)',
+      role: 'Full-Stack Software Engineer',
+      resumeScore: 88,
+      atsScore: 94,
+      tier: 'Strong / Hire Ready',
+      tierColor: 'emerald',
+      roastQuote: "Look, your multi-tenant isolation and rPPG computer vision pipelines are legitimately solid, but you hid your database latency benchmarks under bullet point three. Recruiters skim in 6 seconds—put your throughput metrics right where they can't miss them!",
+      strengths: [
+        'Zero-knowledge AES-128 cryptographic offloading with Celery & Redis (<200ms latency)',
+        'Custom remote Photoplethysmography (POS algorithm) without third-party wrapper dependencies',
+        'Strict multi-tenant row-level database partitioning across isolated schema models'
+      ],
+      fixFirst: 'Elevate your system scalability benchmarks and API response percentiles directly to your executive summary.',
+      atsFactors: [
+        { name: 'Standard Section Hierarchy', score: '98%', status: 'Pass' },
+        { name: 'Quantified Action Verbs', score: '92%', status: 'Pass' },
+        { name: 'Single-Column Text Stream', score: '96%', status: 'Pass' },
+        { name: 'Keyword Cloud Density', score: '90%', status: 'Pass' }
+      ],
+      recruiterQuestions: [
+        {
+          q: 'Why did you pick Celery over simple background worker threads?',
+          a: 'Celery provides durable distributed broker-backed task persistence with Redis. Heavy AES encryption jobs survive web worker restarts and can scale horizontally across multiple container instances.'
+        },
+        {
+          q: 'How did you handle the rPPG ambient lighting noise in FaceVitals?',
+          a: 'Applied 2nd-order Butterworth bandpass filtering (0.8–2.5 Hz for HR) coupled with Plane-Orthogonal-to-Skin (POS) projection to isolate pure pulsatile capillary reflectance from motion artifacts.'
+        }
+      ]
+    },
+    junior: {
+      name: 'Generic CS Student',
+      role: 'Aspiring Software Developer',
+      resumeScore: 58,
+      atsScore: 72,
+      tier: 'Needs Work',
+      tierColor: 'amber',
+      roastQuote: "You listed 18 separate programming languages, but your only project is a copy-pasted weather app and a to-do list. In 2026, recruiters instantly spot tutorial fluff. Show me production auth, deployed databases, and error handling.",
+      strengths: [
+        'Clean accredited university degree',
+        'Demonstrates grasp of core data structures'
+      ],
+      fixFirst: 'Delete 10 unproven keywords. Replace one tutorial project with a deployed full-stack application handling authenticated sessions.',
+      atsFactors: [
+        { name: 'Standard Section Hierarchy', score: '82%', status: 'Pass' },
+        { name: 'Quantified Action Verbs', score: '44%', status: 'Warning' },
+        { name: 'Single-Column Text Stream', score: '88%', status: 'Pass' },
+        { name: 'Keyword Cloud Density', score: '52%', status: 'Warning' }
+      ],
+      recruiterQuestions: [
+        {
+          q: 'What makes a project stand out over a tutorial?',
+          a: 'Adding private route protection (JWT), automated database migrations, deployed hosting on Render/Vercel, and public GitHub CI/CD.'
+        },
+        {
+          q: 'Should I keep all 18 programming languages on my resume?',
+          a: 'No. Trim to your top 2 languages (e.g. Python, JavaScript) where you can comfortably defend memory models and framework internals.'
+        }
+      ]
+    },
+    unformatted: {
+      name: 'Design-Heavy Graphic Resume',
+      role: 'UI/UX & Frontend Dev',
+      resumeScore: 42,
+      atsScore: 38,
+      tier: 'High ATS Risk',
+      tierColor: 'rose',
+      roastQuote: "Two-column graphic resume with skill rating progress bars! Standard ATS parsers will split your text stream across columns, turning your project descriptions into an unreadable scrambled word salad.",
+      strengths: [
+        'Visually aesthetic for human eyes in a print portfolio'
+      ],
+      fixFirst: 'Immediately migrate to a clean, single-column machine-parseable format without tables, columns, or graphic skill bars.',
+      atsFactors: [
+        { name: 'Standard Section Hierarchy', score: '40%', status: 'Fail' },
+        { name: 'Quantified Action Verbs', score: '55%', status: 'Warning' },
+        { name: 'Single-Column Text Stream', score: '25%', status: 'Fail' },
+        { name: 'Keyword Cloud Density', score: '32%', status: 'Fail' }
+      ],
+      recruiterQuestions: [
+        {
+          q: 'Why do skill rating bars hurt ATS scores?',
+          a: 'ATS systems cannot parse graphical SVGs or percentages into candidate qualifications. They need plain semantic text.'
+        },
+        {
+          q: 'Can I keep two columns for my contact info?',
+          a: 'Even contact info in two columns frequently merges telephone numbers into email addresses during PDF stream extraction.'
+        }
+      ]
+    }
   };
 
-  const toggleTaskStatus = (id) => {
-    setTasks(prev => prev.map(t => {
-      if (t.id === id) {
-        const nextStatus = t.status === 'Pending' ? 'In Progress' : t.status === 'In Progress' ? 'Completed' : 'Pending';
-        return { ...t, status: nextStatus };
-      }
-      return t;
-    }));
-  };
-
-  const handleAddExpense = (e) => {
-    e.preventDefault();
-    if (!newExpenseName.trim() || !newExpenseAmount.trim()) return;
-    const amt = parseFloat(newExpenseAmount);
-    if (isNaN(amt)) return;
-    setExpenses(prev => [
-      ...prev,
-      { id: Date.now(), name: newExpenseName.trim(), amount: amt }
-    ]);
-    setNewExpenseName('');
-    setNewExpenseAmount('');
-  };
-
-  const handleDeleteExpense = (id) => {
-    setExpenses(prev => prev.filter(e => e.id !== id));
-  };
-
-  const taskCompletionRate = tasks.length ? Math.round((tasks.filter(t => t.status === 'Completed').length / tasks.length) * 100) : 0;
-  const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const [selectedResumeProfile, setSelectedResumeProfile] = useState('mohith');
+  const [selectedRoastQuestion, setSelectedRoastQuestion] = useState(0);
 
   // Simulator States for TenantVault
   const [consoleLogs, setConsoleLogs] = useState([
@@ -122,102 +163,108 @@ export default function Projects() {
   const canvasRef = useRef(null);
   const sectionRef = useRef(null);
 
-  // Simulator States for AI Notes Workspace
-  const [noteTitle, setNoteTitle] = useState('Draft SaaS Launch Plan');
-  const [noteContent, setNoteContent] = useState(
-    "We need to set up Render web services for Django. Let's configure JWT refresh interval to 1 day. Check if the database scales to 10k reads. Create a standard billing route for monthly subscribers. Also, finalize the marketing templates by Friday."
-  );
-  
-  const [saveStatus, setSaveStatus] = useState('Saved');
-  const [activeTags, setActiveTags] = useState(['#SaaS', '#Database']);
-  const [isPinned, setIsPinned] = useState(true);
-  const [isArchived, setIsArchived] = useState(false);
-
-  const [isGeneratingTitle, setIsGeneratingTitle] = useState(false);
-  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
-  const [isExtractingActions, setIsExtractingActions] = useState(false);
-
-  const [aiSuggestedTitle, setAiSuggestedTitle] = useState(null);
-  const [aiSummary, setAiSummary] = useState(null);
-  const [aiActionItems, setAiActionItems] = useState(null);
-
-  useEffect(() => {
-    if (noteTitle === 'Draft SaaS Launch Plan' && noteContent.startsWith("We need to set up Render")) {
-      return;
+  // Simulator States for QueryMind Text-to-SQL
+  const queryMindPresets = [
+    {
+      id: 'rev',
+      label: 'Top Revenue Products',
+      query: 'Which 5 products generated the most revenue last quarter?',
+      retrievedSchemas: [
+        { table: 'products', distance: 0.124, relevance: '0.88 match' },
+        { table: 'orders', distance: 0.145, relevance: '0.85 match' },
+        { table: 'payments', distance: 0.189, relevance: '0.81 match' }
+      ],
+      sql: `SELECT p.product_name, 
+       SUM(pay.amount) AS total_revenue,
+       COUNT(o.id) AS units_sold
+FROM products p
+JOIN orders o ON p.id = o.product_id
+JOIN payments pay ON o.id = pay.order_id
+GROUP BY p.product_name
+ORDER BY total_revenue DESC
+LIMIT 5;`,
+      securityStatus: 'SAFE_READ_ONLY',
+      securityDetail: 'Validated: ANSI SELECT syntax. Prohibited DDL/DML tokens: 0. Read-only connection enforced.',
+      executionTime: '14ms',
+      rowCount: 5,
+      results: [
+        { col1: 'Noise-Canceling Pro Headphones', col2: '$34,250', col3: '171 units' },
+        { col1: 'Ultra HD 4K Monitor 27"', col2: '$28,900', col3: '96 units' },
+        { col1: 'Mechanical Ergonomic Keyboard', col2: '$19,450', col3: '130 units' },
+        { col1: 'USB-C Universal Docking Station', col2: '$14,800', col3: '148 units' },
+        { col1: 'Smart Fitness Tracker Gen 3', col2: '$12,100', col3: '81 units' }
+      ],
+      summary: 'The top revenue driver is Noise-Canceling Pro Headphones ($34,250 across 171 units), followed by the Ultra HD 4K Monitor ($28,900). The top 5 products represent 68.4% of total quarterly catalog gross merchandise value.'
+    },
+    {
+      id: 'dormant',
+      label: 'Dormant Customers',
+      query: 'Find customers who have not placed any orders in the past 6 months.',
+      retrievedSchemas: [
+        { table: 'users', distance: 0.118, relevance: '0.88 match' },
+        { table: 'orders', distance: 0.132, relevance: '0.87 match' }
+      ],
+      sql: `SELECT u.id, u.name, u.email, 
+       MAX(o.created_at) AS last_order_date
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+GROUP BY u.id, u.name, u.email
+HAVING last_order_date < DATE_SUB(NOW(), INTERVAL 6 MONTH)
+   OR last_order_date IS NULL
+LIMIT 5;`,
+      securityStatus: 'SAFE_READ_ONLY',
+      securityDetail: 'Validated: Standard SELECT query. Regex blocklist clean. textsql_reader role active.',
+      executionTime: '11ms',
+      rowCount: 3,
+      results: [
+        { col1: 'Sarah Jenkins', col2: 'sarah.j@example.com', col3: '7 months inactive' },
+        { col1: 'Marcus Chen', col2: 'mchen99@example.com', col3: '9 months inactive' },
+        { col1: 'Elena Rostova', col2: 'elena.r@example.com', col3: '11 months inactive' }
+      ],
+      summary: 'Identified 3 high-value dormant customer accounts exceeding the 180-day inactivity threshold. Recommended action: trigger targeted retention campaign via automated notification pipeline.'
+    },
+    {
+      id: 'aov',
+      label: 'Order Value by City',
+      query: 'What is the average order value across user cities?',
+      retrievedSchemas: [
+        { table: 'users', distance: 0.110, relevance: '0.89 match' },
+        { table: 'orders', distance: 0.151, relevance: '0.85 match' },
+        { table: 'payments', distance: 0.177, relevance: '0.82 match' }
+      ],
+      sql: `SELECT u.city, 
+       ROUND(AVG(pay.amount), 2) AS avg_order_value, 
+       COUNT(o.id) AS total_orders
+FROM users u
+JOIN orders o ON u.id = o.user_id
+JOIN payments pay ON o.id = pay.order_id
+GROUP BY u.city
+ORDER BY avg_order_value DESC
+LIMIT 4;`,
+      securityStatus: 'SAFE_READ_ONLY',
+      securityDetail: 'Validated: Safe analytical aggregation. Write/Drop protection verified.',
+      executionTime: '18ms',
+      rowCount: 4,
+      results: [
+        { col1: 'Seattle', col2: '$218.40 avg', col3: '420 orders' },
+        { col1: 'San Francisco', col2: '$194.20 avg', col3: '610 orders' },
+        { col1: 'New York', col2: '$182.50 avg', col3: '940 orders' },
+        { col1: 'Austin', col2: '$156.80 avg', col3: '380 orders' }
+      ],
+      summary: 'Seattle recorded the highest Average Order Value at $218.40 across 420 orders, with New York accounting for the largest total order volume (940 orders).'
     }
-    
-    setSaveStatus('Saving...');
-    const timer = setTimeout(() => {
-      setSaveStatus('Saved');
-    }, 800);
-    
-    return () => clearTimeout(timer);
-  }, [noteTitle, noteContent]);
+  ];
 
-  const handleSuggestTitle = () => {
-    if (isGeneratingTitle) return;
-    setIsGeneratingTitle(true);
-    setAiSuggestedTitle(null);
-    
-    setTimeout(() => {
-      setIsGeneratingTitle(false);
-      const text = noteContent.toLowerCase();
-      if (text.includes('database') || text.includes('scales')) {
-        setAiSuggestedTitle('SaaS Launch: High-Performance Database & Deployment Plan');
-      } else if (text.includes('billing') || text.includes('subscribers')) {
-        setAiSuggestedTitle('Stripe Billing Integration & Customer Routes');
-      } else {
-        setAiSuggestedTitle('AI Notes: Development & Infrastructure Roadmap');
-      }
-    }, 1000);
-  };
+  const [activeQueryPreset, setActiveQueryPreset] = useState(0);
+  const [activeStageTab, setActiveStageTab] = useState('pipeline'); // 'pipeline' | 'sql' | 'answer'
+  const [isSimulatingQuery, setIsSimulatingQuery] = useState(false);
 
-  const handleGenerateSummary = () => {
-    if (isGeneratingSummary) return;
-    setIsGeneratingSummary(true);
-    setAiSummary(null);
-    
+  const handleRunQuery = (idx) => {
+    setActiveQueryPreset(idx);
+    setIsSimulatingQuery(true);
     setTimeout(() => {
-      setIsGeneratingSummary(false);
-      const text = noteContent.toLowerCase();
-      let summary = "This note summarizes the deployment workflow for a Django-based SaaS product, emphasizing Render node scaling and JWT auth duration. ";
-      if (text.includes('10k') || text.includes('scales')) {
-        summary += "It includes executing Neon database queries to verify 10,000 read operations. ";
-      }
-      summary += "Also outlines deliverables for marketing assets and Stripe subscription configurations.";
-      setAiSummary(summary);
-    }, 1200);
-  };
-
-  const handleExtractActions = () => {
-    if (isExtractingActions) return;
-    setIsExtractingActions(true);
-    setAiActionItems(null);
-    
-    setTimeout(() => {
-      setIsExtractingActions(false);
-      const items = [];
-      const text = noteContent.toLowerCase();
-      if (text.includes('render') || text.includes('django')) {
-        items.push('Deploy Django REST backend services on Render.');
-      }
-      if (text.includes('jwt')) {
-        items.push('Configure JWT session duration to 24 hours (with rotation).');
-      }
-      if (text.includes('reads') || text.includes('database')) {
-        items.push('Perform load tests for Neon/MySQL database at 10,000 requests.');
-      }
-      if (text.includes('billing') || text.includes('subscribers')) {
-        items.push('Build Stripe-compatible billing integration routes.');
-      }
-      if (text.includes('marketing') || text.includes('friday')) {
-        items.push('Finalize marketing landing page assets before Friday EOD.');
-      }
-      if (items.length === 0) {
-        items.push('Review notes for actionable insights.', 'Organize tags and update public sharing status.');
-      }
-      setAiActionItems(items);
-    }, 1500);
+      setIsSimulatingQuery(false);
+    }, 400);
   };
 
   // Parallax transform based on section scroll progress
@@ -383,26 +430,26 @@ export default function Projects() {
               FaceVitals ML/CV
             </button>
             <button
-              onClick={() => setActiveProject('tracknest')}
+              onClick={() => setActiveProject('resumeroaster')}
               className={`py-3 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-xs md:text-sm ${
-                activeProject === 'tracknest'
-                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-600/30'
+                activeProject === 'resumeroaster'
+                  ? 'bg-gradient-to-r from-rose-600 to-amber-500 text-white shadow-lg shadow-rose-600/30'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <ClipboardList className="w-4 h-4" />
-              TrackNest Dashboard
+              <Flame className="w-4 h-4" />
+              Resume Roaster AI
             </button>
             <button
-              onClick={() => setActiveProject('ainotes')}
+              onClick={() => setActiveProject('querymind')}
               className={`py-3 rounded-xl font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-xs md:text-sm ${
-                activeProject === 'ainotes'
-                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-600/30'
+                activeProject === 'querymind'
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Brain className="w-4 h-4" />
-              AI Notes Workspace
+              <Database className="w-4 h-4" />
+              QueryMind Text-to-SQL
             </button>
           </div>
         </div>
@@ -809,10 +856,273 @@ export default function Projects() {
               </motion.div>
             )}
 
-            {/* Project 3: TrackNest */}
-            {activeProject === 'tracknest' && (
+            {/* Project 3: Resume Roaster */}
+            {activeProject === 'resumeroaster' && (
               <motion.div
-                key="tracknest"
+                key="resumeroaster"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
+              >
+                {/* Info and Navigation Column */}
+                <div className="lg:col-span-6 flex flex-col justify-between">
+                  <div>
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-rose-500/25 bg-rose-500/10 text-rose-300 text-xs font-semibold mb-4">
+                      <Flame className="w-3.5 h-3.5 text-amber-400" />
+                      <span>AI Recruiter Persona &amp; Dual-Engine ATS Engine</span>
+                    </div>
+
+                    <h3 className="text-2xl md:text-3.5xl font-extrabold text-white mb-4">
+                      Resume Roaster
+                    </h3>
+
+                    <p className="text-gray-300 text-base md:text-lg mb-6 leading-relaxed">
+                      A hybrid dual-engine platform combining deterministic Python mathematical scoring 
+                      with Google Gemini to evaluate tech resumes like a 20-year veteran senior tech recruiter. 
+                      Generates dynamic career-stage weighted Resume Scores, multi-factor ATS compatibility audits, 
+                      unfiltered evidence-backed roasts, and interactive recruiter Q&amp;A.
+                    </p>
+
+                    {/* Tab Navigation for details */}
+                    <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                      {['overview', 'architecture', 'simulator'].map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setResumeRoasterTab(tab)}
+                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                            resumeRoasterTab === tab
+                              ? 'bg-white/10 text-white border border-white/10'
+                              : 'text-gray-500 hover:text-gray-300 border border-transparent'
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Tab Contents */}
+                    <div className="min-h-[220px]">
+                      {resumeRoasterTab === 'overview' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Key Technical Highlights:</h4>
+                          <ul className="space-y-2.5 text-gray-400 text-sm">
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-rose-400 font-bold">✓</span>
+                              <span><strong>Dual-Engine Scoring Architecture:</strong> Pure deterministic Python algorithms calculate Resume Strength (0–100) and ATS Compatibility (0–100) before invoking LLMs, ensuring 100% reproducible baseline metrics.</span>
+                            </li>
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-rose-400 font-bold">✓</span>
+                              <span><strong>Veteran Recruiter Persona:</strong> Google Gemini 1.5 Flash generates unfiltered, constructive roasts with zero corporate fluff, citing specific project architectures, missing metrics, and prioritized fixes.</span>
+                            </li>
+                            <li className="flex items-start gap-2.5">
+                              <span className="text-rose-400 font-bold">✓</span>
+                              <span><strong>Heuristic Layout &amp; Document Parsing:</strong> PyMuPDF (<code className="text-rose-300 font-mono text-xs">fitz</code>) and <code className="text-rose-300 font-mono text-xs">python-docx</code> extract raw text streams, detecting headers, contact items, project bullets, and multi-column formatting flaws.</span>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+
+                      {resumeRoasterTab === 'architecture' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">System Processing Pipeline:</h4>
+                          <div className="grid grid-cols-2 gap-4 text-xs">
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-rose-400 font-semibold block mb-1">1. Stream Document Extraction</span>
+                              PyMuPDF and python-docx extract text streams with word count validation (&gt;50 words) and missing field audits.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-rose-400 font-semibold block mb-1">2. Heuristic Segmentation</span>
+                              Regex patterns segment document into structured dataclasses: Header, Summary, Education, Experience, Projects, Skills.
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-rose-400 font-semibold block mb-1">3. Deterministic Python Scoring</span>
+                              Calculates career-stage weighted Resume Score (0–100) + 6-factor ATS model (Hierarchy, Verbs, Single-Column, Density).
+                            </div>
+                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
+                              <span className="text-rose-400 font-semibold block mb-1">4. Generative Recruiter Engine</span>
+                              Gemini 1.5 Flash system prompt enforces strict recruiter persona, structured JSON schema, and exponential backoff.
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {resumeRoasterTab === 'simulator' && (
+                        <div className="space-y-4">
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Interactive Demo Details:</h4>
+                          <p className="text-gray-400 text-xs leading-relaxed">
+                            Interact with the live Resume Roaster simulator on the right. Toggle between different candidate profiles, observe real-time mathematical Resume &amp; ATS score changes, inspect the unfiltered recruiter roast, and test the interactive follow-up recruiter Q&amp;A.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex flex-wrap items-center gap-4 mt-8">
+                    <a
+                      href="https://github.com/mohithreddy123-hub/Resume-Roaster"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white flex items-center gap-2 font-bold text-sm transition-all duration-200"
+                    >
+                      <Github className="w-4 h-4" />
+                      GitHub Code
+                    </a>
+                  </div>
+                </div>
+
+                {/* Simulated Screen / Visual Column */}
+                <div className="lg:col-span-6 flex flex-col items-stretch">
+                  <div className="bg-dark-950 border border-white/5 rounded-2xl flex flex-col flex-grow overflow-hidden shadow-inner font-mono text-[11px] text-gray-400">
+                    
+                    {/* Console Header */}
+                    <div className="bg-white/5 px-4 py-3 border-b border-white/5 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                        <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                        <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Flame className="w-3.5 h-3.5 text-rose-400" />
+                        <span className="text-gray-300 font-semibold tracking-wide text-xs">Resume Roaster — Recruiter Console</span>
+                      </div>
+                      <span className="text-[10px] text-gray-500">v1.39 Hybrid Engine</span>
+                    </div>
+
+                    {/* Candidate Profile Switcher */}
+                    <div className="p-3 bg-dark-950/70 border-b border-white/5 flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center text-xs">
+                      <span className="text-gray-400 font-bold">Candidate:</span>
+                      <div className="flex flex-wrap gap-1.5 w-full sm:w-auto">
+                        {Object.entries(resumeProfiles).map(([key, profile]) => (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              setSelectedResumeProfile(key);
+                              setSelectedRoastQuestion(0);
+                            }}
+                            className={`px-2.5 py-1 rounded font-bold transition-all duration-200 cursor-pointer text-[10px] ${
+                              selectedResumeProfile === key
+                                ? 'bg-gradient-to-r from-rose-600/30 to-amber-600/30 text-rose-300 border border-rose-500/40'
+                                : 'bg-white/5 hover:bg-white/10 text-gray-400 border border-transparent'
+                            }`}
+                          >
+                            {key === 'mohith' ? 'Mohith (Systems)' : key === 'junior' ? 'Junior Dev' : 'Graphic Format'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Scores Dashboard */}
+                    <div className="p-4 border-b border-white/5 bg-white/[0.02]">
+                      <div className="grid grid-cols-3 gap-3 text-center">
+                        <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
+                          <span className="text-[10px] uppercase text-gray-400 font-bold block mb-1">Resume Score</span>
+                          <span className="text-xl md:text-2xl font-black text-rose-400">
+                            {resumeProfiles[selectedResumeProfile].resumeScore}
+                            <span className="text-xs text-gray-500 font-normal">/100</span>
+                          </span>
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-white/5 border border-white/5">
+                          <span className="text-[10px] uppercase text-gray-400 font-bold block mb-1">ATS Match</span>
+                          <span className="text-xl md:text-2xl font-black text-amber-400">
+                            {resumeProfiles[selectedResumeProfile].atsScore}
+                            <span className="text-xs text-gray-500 font-normal">/100</span>
+                          </span>
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 flex flex-col justify-center">
+                          <span className="text-[10px] uppercase text-gray-400 font-bold block mb-1">Recruiter Tier</span>
+                          <span className={`text-xs font-bold ${
+                            resumeProfiles[selectedResumeProfile].tierColor === 'emerald' ? 'text-emerald-400' :
+                            resumeProfiles[selectedResumeProfile].tierColor === 'amber' ? 'text-amber-400' : 'text-rose-400'
+                          }`}>
+                            {resumeProfiles[selectedResumeProfile].tier}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* ATS Factor Badges */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-3">
+                        {resumeProfiles[selectedResumeProfile].atsFactors.map((f, i) => (
+                          <div key={i} className="flex items-center justify-between px-2 py-1 rounded bg-black/40 border border-white/5 text-[9px]">
+                            <span className="text-gray-400 truncate mr-1">{f.name.split(' ')[0]}</span>
+                            <span className={`font-bold ${
+                              f.status === 'Pass' ? 'text-emerald-400' :
+                              f.status === 'Warning' ? 'text-amber-400' : 'text-rose-400'
+                            }`}>
+                              {f.score}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Recruiter Unvarnished Roast Quote */}
+                    <div className="p-4 border-b border-white/5 bg-rose-500/[0.03]">
+                      <div className="flex items-start gap-2.5 mb-2">
+                        <div className="p-1 rounded bg-rose-500/20 text-rose-300 mt-0.5">
+                          <Flame className="w-3.5 h-3.5" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] uppercase font-bold text-rose-400 tracking-wider">Recruiter Feedback (Google Gemini 1.5):</span>
+                          <p className="text-gray-300 text-xs italic mt-1 leading-relaxed">
+                            &ldquo;{resumeProfiles[selectedResumeProfile].roastQuote}&rdquo;
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-[10px] text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-lg px-2.5 py-1.5">
+                        <strong>Fix First:</strong> {resumeProfiles[selectedResumeProfile].fixFirst}
+                      </div>
+                    </div>
+
+                    {/* Interactive Recruiter Q&amp;A */}
+                    <div className="p-4 flex-grow flex flex-col justify-between">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-2">
+                          Ask the Recruiter (Interactive Follow-Up):
+                        </span>
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {resumeProfiles[selectedResumeProfile].recruiterQuestions.map((item, qIdx) => (
+                            <button
+                              key={qIdx}
+                              onClick={() => setSelectedRoastQuestion(qIdx)}
+                              className={`text-[10px] text-left px-2.5 py-1.5 rounded-lg border transition-all duration-200 cursor-pointer truncate max-w-full ${
+                                selectedRoastQuestion === qIdx
+                                  ? 'bg-rose-500/20 border-rose-500/40 text-white'
+                                  : 'bg-white/5 border-white/5 text-gray-400 hover:text-gray-200'
+                              }`}
+                            >
+                              &bull; {item.q}
+                            </button>
+                          ))}
+                        </div>
+                        <div className="p-2.5 rounded-lg bg-black/60 border border-white/5 text-xs text-gray-300 leading-relaxed min-h-[60px]">
+                          <span className="text-rose-400 font-bold mr-1.5">&gt; Recruiter:</span>
+                          {resumeProfiles[selectedResumeProfile].recruiterQuestions[selectedRoastQuestion]?.a}
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Tech stack badge list */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {['Python 3.12', 'Google Gemini 1.5 Flash', 'Streamlit', 'PyMuPDF (fitz)', 'python-docx', 'Pydantic', 'Regex', 'Custom CSS3'].map((tech) => (
+                      <span key={tech} className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-gray-300">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Project 4: QueryMind (Text-to-SQL RAG) */}
+            {activeProject === 'querymind' && (
+              <motion.div
+                key="querymind"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -824,17 +1134,19 @@ export default function Projects() {
                   <div>
                     {/* Badge */}
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-300 text-xs font-semibold mb-4">
-                      <span>Full Stack Productivity & Budget SaaS</span>
+                      <Database className="w-3.5 h-3.5 text-teal-400" />
+                      <span>Enterprise Text-to-SQL RAG Pipeline</span>
                     </div>
 
                     <h3 className="text-2xl md:text-3.5xl font-extrabold text-white mb-4">
-                      TrackNest
+                      QueryMind
                     </h3>
 
                     <p className="text-gray-300 text-base md:text-lg mb-6 leading-relaxed">
-                      A professional full-stack application designed to unify task management 
-                      and expense tracking, providing real-time aggregated metrics, multi-user 
-                      isolation, and dynamic visual dashboards.
+                      An enterprise-grade, retrieval-augmented generation (RAG) conversational interface 
+                      for relational databases (MySQL). Uses ChromaDB vector similarity search to dynamically 
+                      retrieve only relevant table schemas, Google Gemini 2.5 Flash for ANSI SQL synthesis, 
+                      two-tier security guardrails, and read-only database execution to deliver conversational business intelligence.
                     </p>
 
                     {/* Tab Navigation for details */}
@@ -842,9 +1154,9 @@ export default function Projects() {
                       {['overview', 'architecture', 'simulator'].map((tab) => (
                         <button
                           key={tab}
-                          onClick={() => setTrackNestTab(tab)}
+                          onClick={() => setQueryMindTab(tab)}
                           className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                            trackNestTab === tab
+                            queryMindTab === tab
                               ? 'bg-white/10 text-white border border-white/10'
                               : 'text-gray-500 hover:text-gray-300 border border-transparent'
                           }`}
@@ -856,55 +1168,55 @@ export default function Projects() {
 
                     {/* Tab Contents */}
                     <div className="min-h-[220px]">
-                      {trackNestTab === 'overview' && (
+                      {queryMindTab === 'overview' && (
                         <div className="space-y-4">
-                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Key Technical Features:</h4>
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Key Technical Highlights:</h4>
                           <ul className="space-y-2.5 text-gray-400 text-sm">
                             <li className="flex items-start gap-2.5">
                               <span className="text-emerald-400 font-bold">✓</span>
-                              <span><strong>Unified Dashboard Interface:</strong> Real-time synchronization of daily expenses and multi-tiered task statuses (Pending, In Progress, Completed).</span>
+                              <span><strong>Vector-Augmented Schema RAG:</strong> Solves the prompt context-window limit by embedding table metadata into 3072-dim ChromaDB vectors (<code className="text-emerald-300 font-mono text-xs">gemini-embedding-001</code>), dynamically injecting only top-K relevant schemas into prompts.</span>
                             </li>
                             <li className="flex items-start gap-2.5">
                               <span className="text-emerald-400 font-bold">✓</span>
-                              <span><strong>Real-time Analytical Aggregation:</strong> Executes high-performance sum and completion calculations on database querysets using optimized indexes.</span>
+                              <span><strong>Two-Tier Defense Security:</strong> Strict application-level regex validator blocks destructive DDL/DML statements, backed by a dedicated read-only MySQL role (<code className="text-emerald-300 font-mono text-xs">textsql_reader</code>) with execution row caps.</span>
                             </li>
                             <li className="flex items-start gap-2.5">
                               <span className="text-emerald-400 font-bold">✓</span>
-                              <span><strong>JWT Session Security:</strong> SimpleJWT-based user authentication on the API with automated frontend rotation and session clear rules.</span>
+                              <span><strong>Executive Business Synthesis:</strong> Translates raw database rows into conversational, analytical business answers with currency formatting and key metric highlights.</span>
                             </li>
                           </ul>
                         </div>
                       )}
 
-                      {trackNestTab === 'architecture' && (
+                      {queryMindTab === 'architecture' && (
                         <div className="space-y-4">
-                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">System Architecture:</h4>
+                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">5-Stage RAG Pipeline Architecture:</h4>
                           <div className="grid grid-cols-2 gap-4 text-xs">
                             <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-emerald-400 font-semibold block mb-1">Frontend Client</span>
-                              React SPA built with Axios interceptors, protected routing guards, React Router, and React Hot Toast feedback.
+                              <span className="text-emerald-400 font-semibold block mb-1">1. Vector Schema RAG</span>
+                              Question is embedded into 3072-dim vector; ChromaDB cosine similarity retrieves only top-K matching table schemas.
                             </div>
                             <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-emerald-400 font-semibold block mb-1">REST Backend</span>
-                              Django REST Framework endpoint system, customized global exception handlers, and API request throttling.
+                              <span className="text-emerald-400 font-semibold block mb-1">2. SQL Synthesis (Gemini)</span>
+                              Gemini 2.5 Flash compiles natural language into standards-compliant ANSI MySQL syntax with relational JOIN constraints.
                             </div>
                             <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-emerald-400 font-semibold block mb-1">Persistent Storage</span>
-                              Scalable, structured MySQL relational database utilizing relational indexing and row-level data isolation.
+                              <span className="text-emerald-400 font-semibold block mb-1">3. Security Wall</span>
+                              Regex blocklist rejects DROP, DELETE, INSERT, ALTER, multi-statement injection, and unpermitted schema access.
                             </div>
                             <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-emerald-400 font-semibold block mb-1">Hosting & Deployment</span>
-                              Hosted on Render platforms, served via Gunicorn servers and WhiteNoise middleware for static asset loads.
+                              <span className="text-emerald-400 font-semibold block mb-1">4. Sandboxed MySQL &amp; NL</span>
+                              Executed via textsql_reader role; tabular results fed back to Gemini for executive analytical commentary.
                             </div>
                           </div>
                         </div>
                       )}
 
-                      {trackNestTab === 'simulator' && (
+                      {queryMindTab === 'simulator' && (
                         <div className="space-y-4">
                           <h4 className="text-white font-bold text-sm uppercase tracking-wide">Interactive Demo Details:</h4>
                           <p className="text-gray-400 text-xs leading-relaxed">
-                            Interact with the live dashboard simulator on the right. You can add new tasks, toggle task statuses, add expenses, and see the completion rates and budgets adjust instantly in the analytics overlay!
+                            Interact with the live QueryMind RAG Pipeline Inspector on the right. Select sample enterprise questions, inspect the vector schema matches in ChromaDB, review the generated ANSI SQL query, verify the security sandbox pass, and review the executive conversational synthesis.
                           </p>
                         </div>
                       )}
@@ -914,7 +1226,7 @@ export default function Projects() {
                   {/* Buttons */}
                   <div className="flex flex-wrap items-center gap-4 mt-8">
                     <a
-                      href="https://github.com/mohithreddy123-hub/portfolio"
+                      href="https://github.com/mohithreddy123-hub/QueryMind"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white flex items-center gap-2 font-bold text-sm transition-all duration-200"
@@ -922,489 +1234,167 @@ export default function Projects() {
                       <Github className="w-4 h-4" />
                       GitHub Code
                     </a>
-                    <a
-                      href="https://tracknest-frontend-x6ln.onrender.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-all duration-200"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Live Application
-                    </a>
                   </div>
                 </div>
 
                 {/* Simulated Screen / Visual Column */}
                 <div className="lg:col-span-6 flex flex-col items-stretch">
-                  <div className="bg-dark-950 border border-white/5 rounded-2xl flex flex-col flex-grow overflow-hidden shadow-inner">
+                  <div className="bg-dark-950 border border-white/5 rounded-2xl flex flex-col flex-grow overflow-hidden shadow-inner font-mono text-[11px] text-gray-400">
                     
                     {/* Console Header */}
-                    <div className="bg-white/5 px-4 py-3 border-b border-white/5 flex items-center justify-between font-mono text-[11px]">
+                    <div className="bg-white/5 px-4 py-3 border-b border-white/5 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <span className="w-3 h-3 rounded-full bg-rose-500/80" />
                         <span className="w-3 h-3 rounded-full bg-amber-500/80" />
                         <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
                       </div>
-                      <span className="text-gray-400 font-semibold tracking-wide text-xs">TrackNest Real-Time Dashboard</span>
-                      <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        CONNECTED
+                      <div className="flex items-center gap-2">
+                        <Database className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-gray-300 font-semibold tracking-wide text-xs">QueryMind — RAG Pipeline Inspector</span>
+                      </div>
+                      <span className="text-[10px] text-emerald-400 font-bold">ChromaDB + MySQL</span>
+                    </div>
+
+                    {/* Query Preset Selector */}
+                    <div className="p-3 bg-dark-950/70 border-b border-white/5 flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center text-xs">
+                      <span className="text-gray-400 font-bold">Query:</span>
+                      <div className="flex flex-wrap gap-1.5 w-full sm:w-auto">
+                        {queryMindPresets.map((preset, idx) => (
+                          <button
+                            key={preset.id}
+                            onClick={() => handleRunQuery(idx)}
+                            className={`px-2.5 py-1 rounded font-bold transition-all duration-200 cursor-pointer text-[10px] ${
+                              activeQueryPreset === idx
+                                ? 'bg-gradient-to-r from-emerald-600/30 to-teal-600/30 text-emerald-300 border border-emerald-500/40'
+                                : 'bg-white/5 hover:bg-white/10 text-gray-400 border border-transparent'
+                            }`}
+                          >
+                            {preset.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Question Banner */}
+                    <div className="px-4 py-2.5 border-b border-white/5 bg-white/[0.01] flex items-center gap-2">
+                      <Search className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                      <span className="text-gray-200 text-xs font-sans italic truncate">
+                        &ldquo;{queryMindPresets[activeQueryPreset].query}&rdquo;
                       </span>
                     </div>
 
-                    {/* Dashboard Mini-Analytics Header */}
-                    <div className="p-4 grid grid-cols-2 gap-4 border-b border-white/5">
-                      <div className="bg-white/5 p-3 rounded-xl text-center border border-white/5">
-                        <span className="text-gray-400 text-[10px] uppercase font-bold block mb-1">Task Progress</span>
-                        <div className="flex items-center justify-center gap-2">
-                          <span className="text-emerald-400 text-2xl font-bold font-mono text-glow-emerald">{taskCompletionRate}%</span>
-                        </div>
-                        <div className="w-full bg-white/10 h-1 rounded-full mt-2 overflow-hidden">
-                          <div className="bg-emerald-400 h-full transition-all duration-300" style={{ width: `${taskCompletionRate}%` }} />
-                        </div>
-                      </div>
-                      
-                      <div className="bg-white/5 p-3 rounded-xl text-center border border-white/5">
-                        <span className="text-gray-400 text-[10px] uppercase font-bold block mb-1">Total Expenses</span>
-                        <span className="text-cyan-400 text-2xl font-bold font-mono text-glow-cyan">${totalExpenses}</span>
-                        <span className="text-gray-400 text-[9px] block mt-1">MySQL Indexed Sum</span>
-                      </div>
-                    </div>
-
-                    {/* Simulator Panels split */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 flex-grow overflow-y-auto max-h-[300px]">
-                      {/* Tasks panel */}
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center border-b border-white/5 pb-1">
-                          <span className="text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1">
-                            <ClipboardList className="w-3 h-3 text-emerald-400" />
-                            Tasks ({tasks.length})
-                          </span>
-                        </div>
-
-                        {/* Task Form */}
-                        <form onSubmit={handleAddTask} className="flex gap-1">
-                          <input
-                            type="text"
-                            value={newTaskText}
-                            onChange={(e) => setNewTaskText(e.target.value)}
-                            placeholder="Add task..."
-                            className="flex-grow px-2 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-white outline-none focus:border-emerald-500/30 font-sans"
-                          />
-                          <button type="submit" className="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-bold cursor-pointer">+</button>
-                        </form>
-
-                        {/* Task List */}
-                        <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                          {tasks.map(t => (
-                            <div key={t.id} className="flex justify-between items-center p-1.5 rounded bg-white/5 border border-white/5 text-[9px] font-sans">
-                              <span className="text-gray-300 truncate max-w-[100px]">{t.text}</span>
-                              <button
-                                onClick={() => toggleTaskStatus(t.id)}
-                                className={`px-1.5 py-0.5 rounded text-[8px] font-bold transition-all duration-200 cursor-pointer ${
-                                  t.status === 'Completed'
-                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                    : t.status === 'In Progress'
-                                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                                }`}
-                              >
-                                {t.status}
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Expenses panel */}
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center border-b border-white/5 pb-1">
-                          <span className="text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1">
-                            <Wallet className="w-3 h-3 text-cyan-400" />
-                            Expenses
-                          </span>
-                        </div>
-
-                        {/* Expense Form */}
-                        <form onSubmit={handleAddExpense} className="flex gap-1">
-                          <input
-                            type="text"
-                            value={newExpenseName}
-                            onChange={(e) => setNewExpenseName(e.target.value)}
-                            placeholder="Name"
-                            className="w-1/2 px-1.5 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-white outline-none focus:border-cyan-500/30 font-sans"
-                          />
-                          <input
-                            type="number"
-                            value={newExpenseAmount}
-                            onChange={(e) => setNewExpenseAmount(e.target.value)}
-                            placeholder="$"
-                            className="w-1/4 px-1 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-white outline-none focus:border-cyan-500/30 font-sans"
-                          />
-                          <button type="submit" className="w-1/4 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-[10px] font-bold cursor-pointer">+</button>
-                        </form>
-
-                        {/* Expenses list */}
-                        <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                          {expenses.map(e => (
-                            <div key={e.id} className="flex justify-between items-center p-1.5 rounded bg-white/5 border border-white/5 text-[9px] font-sans">
-                              <div className="flex flex-col truncate max-w-[80px]">
-                                <span className="text-gray-300 truncate">{e.name}</span>
-                              </div>
-                              <div className="flex items-center gap-2 flex-shrink-0">
-                                <span className="text-cyan-400 font-bold font-mono">${e.amount}</span>
-                                <button
-                                  onClick={() => handleDeleteExpense(e.id)}
-                                  className="text-gray-500 hover:text-rose-400 font-bold cursor-pointer text-[8px]"
-                                >
-                                  ✖
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tech stack badge list */}
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {['React.js', 'Django REST Framework', 'MySQL', 'SimpleJWT', 'Axios', 'Gunicorn', 'WhiteNoise', 'Render'].map((tech) => (
-                      <span key={tech} className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-gray-300">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Project 4: AI Notes Workspace */}
-            {activeProject === 'ainotes' && (
-              <motion.div
-                key="ainotes"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
-              >
-                {/* Info and Navigation Column */}
-                <div className="lg:col-span-6 flex flex-col justify-between">
-                  <div>
-                    {/* Badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/25 bg-purple-500/10 text-purple-300 text-xs font-semibold mb-4">
-                      <span>Intelligence-Driven SaaS Workspace</span>
-                    </div>
-
-                    <h3 className="text-2xl md:text-3.5xl font-extrabold text-white mb-4">
-                      AI Notes Workspace
-                    </h3>
-
-                    <p className="text-gray-300 text-base md:text-lg mb-6 leading-relaxed">
-                      A production-ready note-taking platform integrated with Google Gemini AI. 
-                      Transform ordinary markdown writing into summaries, checklists, and 
-                      snappy title suggestions with debounced saving and analytics log tracing.
-                    </p>
-
-                    {/* Tab Navigation for details */}
-                    <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-                      {['overview', 'architecture', 'simulator'].map((tab) => (
-                        <button
-                          key={tab}
-                          onClick={() => setAiNotesTab(tab)}
-                          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                            aiNotesTab === tab
-                              ? 'bg-white/10 text-white border border-white/10'
-                              : 'text-gray-500 hover:text-gray-300 border border-transparent'
-                          }`}
-                        >
-                          {tab}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Tab Contents */}
-                    <div className="min-h-[220px]">
-                      {aiNotesTab === 'overview' && (
-                        <div className="space-y-4">
-                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Key Technical Features:</h4>
-                          <ul className="space-y-2.5 text-gray-400 text-sm">
-                            <li className="flex items-start gap-2.5">
-                              <span className="text-purple-400 font-bold">✓</span>
-                              <span><strong>Gemini AI API Orchestration:</strong> Auto-generates summaries, action checklist lists, and titles based on contextual content scanning.</span>
-                            </li>
-                            <li className="flex items-start gap-2.5">
-                              <span className="text-purple-400 font-bold">✓</span>
-                              <span><strong>Debounced Auto-Save Logic:</strong> Handcrafted React hook schedules background updates, syncing text edits to DB without blocking typing.</span>
-                            </li>
-                            <li className="flex items-start gap-2.5">
-                              <span className="text-purple-400 font-bold">✓</span>
-                              <span><strong>Secure Public Sharing Hub:</strong> Allows sharing unique URL nodes mapping to stateless backend read paths with access counters.</span>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-
-                      {aiNotesTab === 'architecture' && (
-                        <div className="space-y-4">
-                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">System Architecture:</h4>
-                          <div className="grid grid-cols-2 gap-4 text-xs">
-                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-purple-400 font-semibold block mb-1">Frontend Layer</span>
-                              Vite SPA running React 18, Axios middleware interceptors, and TanStack React Query for reliable caching.
-                            </div>
-                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-purple-400 font-semibold block mb-1">DRF REST Core</span>
-                              Django REST Framework powering CRUD models, usage log auditing endpoints, and custom exception handler scopes.
-                            </div>
-                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-purple-400 font-semibold block mb-1">Google Generative AI</span>
-                              Direct API connectors with token consumption monitoring logging to models.py logs.
-                            </div>
-                            <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                              <span className="text-purple-400 font-semibold block mb-1">Persistent Node</span>
-                              SQLite / PostgreSQL schemas parsing complex metadata constraints, tags, and secure JWT relations.
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {aiNotesTab === 'simulator' && (
-                        <div className="space-y-4">
-                          <h4 className="text-white font-bold text-sm uppercase tracking-wide">Interactive Demo Details:</h4>
-                          <p className="text-gray-400 text-xs leading-relaxed">
-                            Write notes in the editor panel on the right. Modify the title and see the auto-save trigger automatically. Use the AI Action toolbar to prompt Gemini to rewrite titles, draft bullet items, or summarize text.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Buttons */}
-                  <div className="flex flex-wrap items-center gap-4 mt-8">
-                    <a
-                      href="https://github.com/mohithreddy123-hub/AI-Notes-Workspace"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white flex items-center gap-2 font-bold text-sm transition-all duration-200"
-                    >
-                      <Github className="w-4 h-4" />
-                      GitHub Code
-                    </a>
-                    <a
-                      href="https://ai-notes-workspace-beta.vercel.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-all duration-200"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Live Application
-                    </a>
-                  </div>
-                </div>
-
-                {/* Simulated Screen / Visual Column */}
-                <div className="lg:col-span-6 flex flex-col items-stretch">
-                  <div className="bg-dark-950 border border-white/5 rounded-2xl flex flex-col flex-grow overflow-hidden shadow-inner">
-                    
-                    {/* Console Header */}
-                    <div className="bg-white/5 px-4 py-3 border-b border-white/5 flex items-center justify-between font-mono text-[11px]">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                        <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                        <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                      </div>
-                      
-                      {/* Note Title Input simulator */}
-                      <input
-                        type="text"
-                        value={noteTitle}
-                        onChange={(e) => setNoteTitle(e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-white outline-none focus:border-purple-500/30 text-[10px] w-1/3 text-center truncate font-sans font-bold"
-                        placeholder="Untitled Note"
-                      />
-
-                      <span className="flex items-center gap-1.5 font-bold">
-                        <span className={`w-1.5 h-1.5 rounded-full ${saveStatus === 'Saved' ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
-                        <span className={`text-[10px] font-mono ${saveStatus === 'Saved' ? 'text-emerald-400' : 'text-amber-400'}`}>{saveStatus.toUpperCase()}</span>
-                      </span>
-                    </div>
-
-                    {/* Workspace layout split */}
-                    <div className="flex flex-col sm:flex-row flex-grow min-h-[340px]">
-                      
-                      {/* Left: Note editing & responses */}
-                      <div className="flex-grow p-4 flex flex-col gap-3 min-h-[220px]">
-                        {/* Prompt Input Area */}
-                        <div className="flex flex-wrap items-center gap-1.5 bg-white/5 p-1.5 rounded-xl border border-white/5">
+                    {/* Stage Navigation */}
+                    <div className="px-4 py-2 border-b border-white/5 bg-black/40 flex items-center justify-between text-[10px]">
+                      <div className="flex items-center gap-2">
+                        {['pipeline', 'sql', 'answer'].map((st) => (
                           <button
-                            onClick={handleSuggestTitle}
-                            disabled={isGeneratingTitle}
-                            className="px-2.5 py-1.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 text-purple-300 text-[10px] font-bold flex items-center gap-1.5 cursor-pointer transition-all duration-200"
+                            key={st}
+                            onClick={() => setActiveStageTab(st)}
+                            className={`px-2 py-0.5 rounded font-bold uppercase transition-all duration-200 cursor-pointer ${
+                              activeStageTab === st
+                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                : 'text-gray-500 hover:text-gray-300'
+                            }`}
                           >
-                            <Sparkles className="w-3.5 h-3.5" />
-                            {isGeneratingTitle ? 'Analyzing...' : 'Suggest Title'}
+                            {st === 'pipeline' ? '1. Vector RAG' : st === 'sql' ? '2. Generated SQL' : '3. Executive Insight'}
                           </button>
-                          <button
-                            onClick={handleGenerateSummary}
-                            disabled={isGeneratingSummary}
-                            className="px-2.5 py-1.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 text-purple-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all duration-200"
-                          >
-                            {isGeneratingSummary ? '🤖 Processing...' : '🤖 Summarize'}
-                          </button>
-                          <button
-                            onClick={handleExtractActions}
-                            disabled={isExtractingActions}
-                            className="px-2.5 py-1.5 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 text-purple-300 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all duration-200"
-                          >
-                            {isExtractingActions ? '✅ Extracting...' : '✅ Tasks'}
-                          </button>
-                        </div>
-
-                        {/* Text Editor content */}
-                        <textarea
-                          value={noteContent}
-                          onChange={(e) => setNoteContent(e.target.value)}
-                          className="flex-grow w-full bg-white/5 border border-white/5 rounded-xl p-3 text-[11px] text-gray-300 outline-none focus:border-purple-500/30 resize-none font-sans min-h-[120px] max-h-[140px] leading-relaxed"
-                          placeholder="Write something in your workspace..."
-                        />
-
-                        {/* AI Responses Display */}
-                        <div className="space-y-2 mt-1">
-                          {/* Suggested Title Response */}
-                          {aiSuggestedTitle && (
-                            <div className="p-2 rounded-xl bg-purple-950/20 border border-purple-500/15 text-[10px] flex items-center justify-between text-purple-300">
-                              <div className="truncate pr-2">
-                                <span className="font-semibold">Gemini Title: </span>
-                                <span className="italic">"{aiSuggestedTitle}"</span>
-                              </div>
-                              <button
-                                onClick={() => {
-                                  setNoteTitle(aiSuggestedTitle);
-                                  setAiSuggestedTitle(null);
-                                }}
-                                className="px-2 py-0.5 rounded bg-purple-600 hover:bg-purple-500 text-white text-[8px] font-bold cursor-pointer flex-shrink-0"
-                              >
-                                Apply
-                              </button>
-                            </div>
-                          )}
-
-                          {/* Summary Response */}
-                          {aiSummary && (
-                            <div className="p-2.5 rounded-xl bg-purple-950/20 border border-purple-500/15 text-[10px] text-gray-300 leading-relaxed relative">
-                              <span className="text-purple-400 font-bold block mb-1">🤖 Gemini Summary:</span>
-                              {aiSummary}
-                              <button
-                                onClick={() => setAiSummary(null)}
-                                className="absolute top-1 right-2 text-gray-500 hover:text-gray-300 text-[9px] cursor-pointer"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          )}
-
-                          {/* Action Items Response */}
-                          {aiActionItems && (
-                            <div className="p-2.5 rounded-xl bg-purple-950/20 border border-purple-500/15 text-[10px] text-gray-300 relative">
-                              <span className="text-purple-400 font-bold block mb-1.5">✅ Extracted Tasks:</span>
-                              <div className="space-y-1">
-                                {aiActionItems.map((item, index) => (
-                                  <label key={index} className="flex items-start gap-2 cursor-pointer hover:text-white">
-                                    <input type="checkbox" className="accent-purple-500 mt-0.5 flex-shrink-0" />
-                                    <span>{item}</span>
-                                  </label>
-                                ))}
-                              </div>
-                              <button
-                                onClick={() => setAiActionItems(null)}
-                                className="absolute top-1 right-2 text-gray-500 hover:text-gray-300 text-[9px] cursor-pointer"
-                              >
-                                ✕
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        ))}
                       </div>
+                      <span className="text-emerald-400/80 font-bold">{queryMindPresets[activeQueryPreset].executionTime}</span>
+                    </div>
 
-                      {/* Right: Metadata sidebar & chart */}
-                      <div className="w-full sm:w-52 bg-white/5 border-t sm:border-t-0 sm:border-l border-white/5 p-4 flex flex-col justify-between gap-4">
-                        
-                        {/* Options: Pins and Archives */}
-                        <div>
-                          <div className="flex items-center justify-between mb-3 pb-1 border-b border-white/5">
-                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Metadata</span>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => setIsPinned(!isPinned)}
-                                className={`p-1 rounded cursor-pointer transition-all duration-200 ${isPinned ? 'text-amber-400 bg-amber-400/10' : 'text-gray-500 hover:text-gray-300'}`}
-                                title={isPinned ? 'Unpin note' : 'Pin note'}
-                              >
-                                <PinIcon className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => setIsArchived(!isArchived)}
-                                className={`p-1 rounded cursor-pointer transition-all duration-200 ${isArchived ? 'text-cyan-400 bg-cyan-400/10' : 'text-gray-500 hover:text-gray-300'}`}
-                                title={isArchived ? 'Unarchive note' : 'Archive note'}
-                              >
-                                <ArchiveIcon className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </div>
-
-                          {/* Tags Section */}
-                          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-1.5">Smart Tags</span>
-                          <div className="flex flex-wrap gap-1">
-                            {['#SaaS', '#AI', '#Database', '#Tasks', '#Tutorial'].map((tag) => {
-                              const isSelected = activeTags.includes(tag);
-                              return (
-                                <button
-                                  key={tag}
-                                  onClick={() => {
-                                    setActiveTags(prev =>
-                                      isSelected ? prev.filter(t => t !== tag) : [...prev, tag]
-                                    );
-                                  }}
-                                  className={`px-2 py-0.5 rounded text-[8px] font-bold border transition-all duration-200 cursor-pointer ${
-                                    isSelected
-                                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-                                      : 'bg-white/5 text-gray-500 border-transparent hover:text-gray-400'
-                                  }`}
-                                >
-                                  {tag}
-                                </button>
-                              );
-                            })}
-                          </div>
+                    {/* Dynamic Stage Body */}
+                    <div className="p-4 flex-grow min-h-[240px] flex flex-col justify-between">
+                      {isSimulatingQuery ? (
+                        <div className="flex flex-col items-center justify-center flex-grow py-8 text-emerald-400 animate-pulse gap-2">
+                          <Terminal className="w-6 h-6 animate-spin" />
+                          <span className="text-xs">Embedding question &amp; searching ChromaDB vectors...</span>
                         </div>
-
-                        {/* SVG Token Chart */}
-                        <div className="mt-2">
-                          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Weekly Gemini API Usage</span>
-                          <div className="flex items-end justify-between h-20 bg-white/5 border border-white/5 rounded-xl p-2">
-                            {[
-                              { day: 'M', tokens: '40%' },
-                              { day: 'T', tokens: '75%' },
-                              { day: 'W', tokens: '20%' },
-                              { day: 'T', tokens: '90%' },
-                              { day: 'F', tokens: '55%' },
-                              { day: 'S', tokens: '15%' },
-                              { day: 'S', tokens: '30%' }
-                            ].map((bar, idx) => (
-                              <div key={idx} className="flex flex-col items-center flex-grow group">
-                                <div className="w-2.5 bg-white/10 rounded-t h-16 relative flex items-end overflow-hidden">
-                                  <div
-                                    className="w-full bg-gradient-to-t from-purple-600 to-indigo-500 rounded-t transition-all duration-500 group-hover:opacity-85"
-                                    style={{ height: bar.tokens }}
-                                  />
+                      ) : (
+                        <>
+                          {activeStageTab === 'pipeline' && (
+                            <div className="space-y-3">
+                              <div>
+                                <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1.5">
+                                  Retrieved Schema Vectors (ChromaDB Cosine Match):
+                                </span>
+                                <div className="grid grid-cols-3 gap-2">
+                                  {queryMindPresets[activeQueryPreset].retrievedSchemas.map((s, idx) => (
+                                    <div key={idx} className="p-2 rounded-lg bg-black/60 border border-white/5">
+                                      <span className="text-emerald-400 font-bold block text-xs truncate">{s.table}</span>
+                                      <span className="text-[9px] text-gray-500 block">dist: {s.distance}</span>
+                                      <span className="text-[9px] text-teal-300/80 block">{s.relevance}</span>
+                                    </div>
+                                  ))}
                                 </div>
-                                <span className="text-[8px] text-gray-500 font-mono mt-1 font-bold">{bar.day}</span>
                               </div>
-                            ))}
-                          </div>
-                        </div>
 
+                              <div className="p-2.5 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-[10px]">
+                                <span className="text-emerald-400 font-bold flex items-center gap-1 mb-0.5">
+                                  <CheckCircle2 className="w-3 h-3" /> Security Sandbox Guardrail:
+                                </span>
+                                <span className="text-gray-300 font-sans">
+                                  {queryMindPresets[activeQueryPreset].securityDetail}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {activeStageTab === 'sql' && (
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between text-[10px] text-gray-400">
+                                <span>Synthesized ANSI SQL (Gemini 2.5 Flash):</span>
+                                <span className="text-emerald-400 font-bold">Read-Only</span>
+                              </div>
+                              <pre className="p-3 rounded-lg bg-black/80 border border-white/5 text-[10.5px] text-emerald-300 font-mono overflow-x-auto leading-relaxed max-h-[160px]">
+                                {queryMindPresets[activeQueryPreset].sql}
+                              </pre>
+                            </div>
+                          )}
+
+                          {activeStageTab === 'answer' && (
+                            <div className="space-y-3">
+                              {/* Executive Insight Box */}
+                              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                                <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider block mb-1">
+                                  Executive Business Insight:
+                                </span>
+                                <p className="text-gray-200 text-xs font-sans leading-relaxed">
+                                  {queryMindPresets[activeQueryPreset].summary}
+                                </p>
+                              </div>
+
+                              {/* Sample Result Preview Table */}
+                              <div>
+                                <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">
+                                  Database Result Set ({queryMindPresets[activeQueryPreset].rowCount} rows):
+                                </span>
+                                <div className="space-y-1">
+                                  {queryMindPresets[activeQueryPreset].results.slice(0, 3).map((r, i) => (
+                                    <div key={i} className="flex justify-between items-center px-2.5 py-1 rounded bg-black/50 border border-white/5 text-[10px]">
+                                      <span className="text-white font-semibold truncate mr-2">{r.col1}</span>
+                                      <span className="text-emerald-400 font-mono flex-shrink-0">{r.col2}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* Bottom Quick-Action Buttons */}
+                      <div className="flex items-center justify-between pt-3 mt-2 border-t border-white/5 text-[10px]">
+                        <div className="flex items-center gap-1.5 text-gray-400">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Gemini 2.5 Flash + ChromaDB v1.5.9</span>
+                        </div>
+                        <button
+                          onClick={() => handleRunQuery((activeQueryPreset + 1) % queryMindPresets.length)}
+                          className="px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-gray-300 font-bold transition-all cursor-pointer flex items-center gap-1"
+                        >
+                          <RotateCcw className="w-3 h-3" /> Next Query
+                        </button>
                       </div>
                     </div>
 
@@ -1412,7 +1402,7 @@ export default function Projects() {
 
                   {/* Tech stack badge list */}
                   <div className="flex flex-wrap gap-2 mt-4">
-                    {['React 18', 'Django 5.0.6', 'Google Gemini AI', 'SimpleJWT', 'PostgreSQL', 'Vite', 'Tailwind CSS', 'Axios', 'Render'].map((tech) => (
+                    {['Python 3.11+', 'Google Gemini 2.5 Flash', 'ChromaDB Vector Store', 'MySQL 8.0', 'PyMySQL', 'Streamlit', 'Regex Guardrails'].map((tech) => (
                       <span key={tech} className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-gray-300">
                         {tech}
                       </span>

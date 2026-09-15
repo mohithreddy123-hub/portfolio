@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code2, Layout, Server, Database, Cloud, ShieldAlert, Brain } from 'lucide-react';
+import { Code2, Layout, Server, Database, Cloud, ShieldAlert, Brain, Sparkles } from 'lucide-react';
 
 const skillCategories = [
   {
@@ -8,6 +8,12 @@ const skillCategories = [
     icon: Code2,
     color: 'from-blue-500/20 to-indigo-500/20 text-blue-400',
     skills: ['Python', 'JavaScript'],
+  },
+  {
+    title: 'Generative AI & LLMs',
+    icon: Sparkles,
+    color: 'from-amber-500/20 to-rose-500/20 text-amber-400',
+    skills: ['Google Gemini API', 'RAG Architecture', 'ChromaDB Vector Store', 'Prompt Engineering', 'PyMuPDF', 'Pydantic'],
   },
   {
     title: 'Frontend',
@@ -25,7 +31,7 @@ const skillCategories = [
     title: 'Databases',
     icon: Database,
     color: 'from-emerald-500/20 to-teal-500/20 text-emerald-400',
-    skills: ['PostgreSQL', 'MySQL', 'SQLite'],
+    skills: ['PostgreSQL', 'MySQL', 'ChromaDB', 'SQLite'],
   },
   {
     title: 'DevOps & Cloud',
@@ -51,6 +57,12 @@ const skillCategories = [
 const skillDescriptions = {
   Python: 'Core programming language used for scripting, AI model training, and robust backend engineering.',
   JavaScript: 'Enables client-side reactivity and handles user events across frontend dashboards.',
+  'Google Gemini API': 'Generative multimodal LLM powering deterministic JSON schema extraction and SQL synthesis.',
+  'RAG Architecture': 'Retrieval-Augmented Generation grounding LLM generation on semantically matched schema & doc vectors.',
+  'ChromaDB Vector Store': 'Vector database performing high-dimensional cosine similarity searches for schema retrieval.',
+  'Prompt Engineering': 'Strict system persona prompts, few-shot examples, and JSON schema enforcement.',
+  PyMuPDF: 'High-performance PDF stream text extractor parsing complex multi-column resumes.',
+  Pydantic: 'Strict data validation ensuring LLM and API payload schemas conform to expected models.',
   'React.js': 'Builds highly componentized interfaces using virtual DOM and state synchronization.',
   HTML5: 'Structures semantic browser content ensuring full accessibility.',
   CSS3: 'Handles layout layout, custom styling sheets, and core style sheets.',
@@ -65,7 +77,8 @@ const skillDescriptions = {
   Daphne: 'ASGI web server running alongside Celery/Redis for multi-protocol async requests.',
   Redis: 'In-memory data structure broker handling fast session storage and job message routing.',
   PostgreSQL: 'Primary relational database utilizing structured data validation and query logic.',
-  MySQL: 'Standard open-source relational storage for legacy database operations.',
+  MySQL: 'Standard open-source relational storage for enterprise queries and read-only sandboxes.',
+  ChromaDB: 'Vector database storing 3072-dim embeddings for cosine semantic schema matching.',
   SQLite: 'Zero-config local embedded query runner for rapid prototyping.',
   Git: 'Tracks version history, code branches, and merge paths.',
   GitHub: 'Collaborative code hosting, continuous deployment integrations, and audit monitoring.',
