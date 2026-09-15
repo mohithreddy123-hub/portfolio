@@ -119,6 +119,16 @@ export default function Navbar() {
           {/* Call To Action */}
           <div className="hidden lg:flex items-center gap-3">
             <a
+              href="/Karnati_Mohith_Reddy_Resume.pdf"
+              download="Karnati_Mohith_Reddy_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-full text-xs font-semibold tracking-wider text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 flex items-center gap-1.5"
+            >
+              <FileText className="w-3.5 h-3.5 text-indigo-400" />
+              Resume
+            </a>
+            <a
               href="#contact"
               onClick={(e) => handleNavClick(e, '#contact')}
               className="px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.5)] transition-all duration-300"
